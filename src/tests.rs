@@ -94,7 +94,7 @@ impl NodeLabels<&'static str> {
         match self {
             Self::UnlabelledNodes(len) => vec![None; len],
             Self::AllNodesLabelled(lbls) => lbls.into_iter().map(Some).collect(),
-            Self::SomeNodesLabelled(lbls) => lbls.into_iter().collect(),
+            Self::SomeNodesLabelled(lbls) => lbls,
         }
     }
 
