@@ -90,8 +90,7 @@ impl<'a> dot::GraphWalk<'a> for Edges {
 ```no_run
 # pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
 pub fn main() {
-    use std::fs::File;
-    let mut f = File::create("example1.dot").unwrap();
+    let mut f = std::fs::File::create("example1.dot").unwrap();
     render_to(&mut f)
 }
 ```
@@ -185,8 +184,7 @@ impl<'a> dot::GraphWalk<'a> for Graph {
 ```no_run
 # pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
 pub fn main() {
-    use std::fs::File;
-    let mut f = File::create("example2.dot").unwrap();
+    let mut f = std::fs::File::create("example2.dot").unwrap();
     render_to(&mut f)
 }
 ```
@@ -253,8 +251,7 @@ impl<'a> dot::GraphWalk<'a> for Graph {
 ```no_run
 # pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
 pub fn main() {
-    use std::fs::File;
-    let mut f = File::create("example3.dot").unwrap();
+    let mut f = std::fs::File::create("example3.dot").unwrap();
     render_to(&mut f)
 }
 ```

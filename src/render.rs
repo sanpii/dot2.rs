@@ -1,6 +1,3 @@
-use std::io;
-use std::io::prelude::*;
-
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum Option {
     NoEdgeLabels,
@@ -17,25 +14,27 @@ pub enum Option {
 
 /// Renders directed graph `g` into the writer `w` in DOT syntax.
 /// (Simple wrapper around `render_opts` that passes a default set of options.)
-pub fn render<'a, N, E, G, W>(g: &'a G, w: &mut W) -> io::Result<()>
+pub fn render<'a, N, E, G, W>(g: &'a G, w: &mut W) -> std::io::Result<()>
 where
     N: Clone + 'a,
     E: Clone + 'a,
     G: crate::Labeller<'a, Node = N, Edge = E> + crate::GraphWalk<'a, Node = N, Edge = E>,
-    W: Write,
+    W: std::io::Write,
 {
     render_opts(g, w, &[])
 }
 
 /// Renders directed graph `g` into the writer `w` in DOT syntax.
 /// (Main entry point for the library.)
-pub fn render_opts<'a, N, E, G, W>(g: &'a G, w: &mut W, options: &[self::Option]) -> io::Result<()>
+pub fn render_opts<'a, N, E, G, W>(g: &'a G, w: &mut W, options: &[self::Option]) -> std::io::Result<()>
 where
     N: Clone + 'a,
     E: Clone + 'a,
     G: crate::Labeller<'a, Node = N, Edge = E> + crate::GraphWalk<'a, Node = N, Edge = E>,
-    W: Write,
+    W: std::io::Write,
 {
+    use std::io::Write;
+
     writeln!(w, "{} {} {{", g.kind().keyword(), g.graph_id().as_slice())?;
 
     // Global graph properties
