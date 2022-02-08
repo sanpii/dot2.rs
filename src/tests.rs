@@ -2,6 +2,7 @@ use crate::label::Text::*;
 
 /// each node is an index in a vector in the graph.
 type Node = usize;
+
 struct Edge {
     from: usize,
     to: usize,
@@ -12,7 +13,13 @@ struct Edge {
     color: Option<&'static str>,
 }
 
-fn edge(from: usize, to: usize, label: &'static str, style: crate::Style, color: Option<&'static str>) -> Edge {
+fn edge(
+    from: usize,
+    to: usize,
+    label: &'static str,
+    style: crate::Style,
+    color: Option<&'static str>,
+) -> Edge {
     Edge {
         from,
         to,
@@ -24,8 +31,15 @@ fn edge(from: usize, to: usize, label: &'static str, style: crate::Style, color:
     }
 }
 
-fn edge_with_arrows(from: usize, to: usize, label: &'static str, style: crate::Style,
-    start_arrow: crate::Arrow, end_arrow: crate::Arrow, color: Option<&'static str>) -> Edge {
+fn edge_with_arrows(
+    from: usize,
+    to: usize,
+    label: &'static str,
+    style: crate::Style,
+    start_arrow: crate::Arrow,
+    end_arrow: crate::Arrow,
+    color: Option<&'static str>,
+) -> Edge {
     Edge {
         from,
         to,
@@ -97,6 +111,7 @@ impl LabelledGraph {
         node_styles: Option<Vec<crate::Style>>,
     ) -> LabelledGraph {
         let count = node_labels.len();
+
         LabelledGraph {
             name,
             node_labels: node_labels.to_opt_strs(),
@@ -111,7 +126,9 @@ impl LabelledGraph {
 
 impl LabelledGraphWithEscStrs {
     fn new(name: &'static str, node_labels: Trivial, edges: Vec<Edge>) -> LabelledGraphWithEscStrs {
-        LabelledGraphWithEscStrs { graph: LabelledGraph::new(name, node_labels, edges, None) }
+        LabelledGraphWithEscStrs {
+            graph: LabelledGraph::new(name, node_labels, edges, None),
+        }
     }
 }
 
@@ -122,30 +139,38 @@ fn id_name<'a>(n: &Node) -> crate::Id<'a> {
 impl<'a> crate::Labeller<'a> for LabelledGraph {
     type Node = Node;
     type Edge = &'a Edge;
+
     fn graph_id(&'a self) -> crate::Id<'a> {
         crate::Id::new(self.name).unwrap()
     }
+
     fn node_id(&'a self, n: &Node) -> crate::Id<'a> {
         id_name(n)
     }
+
     fn node_label(&'a self, n: &Node) -> crate::label::Text<'a> {
         match self.node_labels[*n] {
             Some(l) => LabelStr(l.into()),
             None => LabelStr(id_name(n).name),
         }
     }
+
     fn edge_start_arrow(&'a self, e: &Self::Edge) -> crate::Arrow {
         e.start_arrow.clone()
     }
+
     fn edge_end_arrow(&'a self, e: &Self::Edge) -> crate::Arrow {
         e.end_arrow.clone()
     }
+
     fn edge_label(&'a self, e: &&'a Edge) -> crate::label::Text<'a> {
         LabelStr(e.label.into())
     }
+
     fn node_style(&'a self, n: &Node) -> crate::Style {
         self.node_styles[*n]
     }
+
     fn edge_style(&'a self, e: &&'a Edge) -> crate::Style {
         e.style
     }
@@ -158,17 +183,21 @@ impl<'a> crate::Labeller<'a> for LabelledGraph {
 impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
     type Node = Node;
     type Edge = &'a Edge;
+
     fn graph_id(&'a self) -> crate::Id<'a> {
         self.graph.graph_id()
     }
+
     fn node_id(&'a self, n: &Node) -> crate::Id<'a> {
         self.graph.node_id(n)
     }
+
     fn node_label(&'a self, n: &Node) -> crate::label::Text<'a> {
         match self.graph.node_label(n) {
             LabelStr(s) | EscStr(s) | HtmlStr(s) => EscStr(s),
         }
     }
+
     fn edge_label(&'a self, e: &&'a Edge) -> crate::label::Text<'a> {
         match self.graph.edge_label(e) {
             LabelStr(s) | EscStr(s) | HtmlStr(s) => EscStr(s),
@@ -179,15 +208,19 @@ impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
 impl<'a> crate::GraphWalk<'a> for LabelledGraph {
     type Node = Node;
     type Edge = &'a Edge;
+
     fn nodes(&'a self) -> crate::Nodes<'a, Node> {
         (0..self.node_labels.len()).collect()
     }
+
     fn edges(&'a self) -> crate::Edges<'a, &'a Edge> {
         self.edges.iter().collect()
     }
+
     fn source(&'a self, edge: &&'a Edge) -> Node {
         edge.from
     }
+
     fn target(&'a self, edge: &&'a Edge) -> Node {
         edge.to
     }
@@ -196,15 +229,19 @@ impl<'a> crate::GraphWalk<'a> for LabelledGraph {
 impl<'a> crate::GraphWalk<'a> for LabelledGraphWithEscStrs {
     type Node = Node;
     type Edge = &'a Edge;
+
     fn nodes(&'a self) -> crate::Nodes<'a, Node> {
         self.graph.nodes()
     }
+
     fn edges(&'a self) -> crate::Edges<'a, &'a Edge> {
         self.graph.edges()
     }
+
     fn source(&'a self, edge: &&'a Edge) -> Node {
         edge.from
     }
+
     fn target(&'a self, edge: &&'a Edge) -> Node {
         edge.to
     }
@@ -213,8 +250,10 @@ impl<'a> crate::GraphWalk<'a> for LabelledGraphWithEscStrs {
 fn test_input(g: LabelledGraph) -> std::io::Result<String> {
     let mut writer = Vec::new();
     crate::render(&g, &mut writer).unwrap();
+
     let mut s = String::new();
     std::io::Read::read_to_string(&mut &*writer, &mut s)?;
+
     Ok(s)
 }
 
@@ -226,6 +265,7 @@ fn test_input(g: LabelledGraph) -> std::io::Result<String> {
 fn empty_graph() {
     let labels: Trivial = NodeLabels::UnlabelledNodes(0);
     let r = test_input(LabelledGraph::new("empty_graph", labels, vec![], None));
+
     assert_eq!(
         r.unwrap(),
         r#"digraph empty_graph {
@@ -238,6 +278,7 @@ fn empty_graph() {
 fn single_node() {
     let labels: Trivial = NodeLabels::UnlabelledNodes(1);
     let r = test_input(LabelledGraph::new("single_node", labels, vec![], None));
+
     assert_eq!(
         r.unwrap(),
         r#"digraph single_node {
@@ -252,6 +293,7 @@ fn single_node_with_style() {
     let labels: Trivial = NodeLabels::UnlabelledNodes(1);
     let styles = Some(vec![crate::Style::Dashed]);
     let r = test_input(LabelledGraph::new("single_node", labels, vec![], styles));
+
     assert_eq!(
         r.unwrap(),
         r#"digraph single_node {
@@ -270,6 +312,7 @@ fn single_edge() {
         vec![edge(0, 1, "E", crate::Style::None, None)],
         None,
     ));
+
     assert_eq!(
         result.unwrap(),
         r#"digraph single_edge {
@@ -290,6 +333,7 @@ fn single_edge_with_style() {
         vec![edge(0, 1, "E", crate::Style::Bold, Some("red"))],
         None,
     ));
+
     assert_eq!(
         result.unwrap(),
         r#"digraph single_edge {
@@ -311,6 +355,7 @@ fn test_some_labelled() {
         vec![edge(0, 1, "A-1", crate::Style::None, None)],
         styles,
     ));
+
     assert_eq!(
         result.unwrap(),
         r#"digraph test_some_labelled {
@@ -331,6 +376,7 @@ fn single_cyclic_node() {
         vec![edge(0, 0, "E", crate::Style::None, None)],
         None,
     ));
+
     assert_eq!(
         r.unwrap(),
         r#"digraph single_cyclic_node {
@@ -355,6 +401,7 @@ fn hasse_diagram() {
         ],
         None,
     ));
+
     assert_eq!(
         r.unwrap(),
         r#"digraph hasse_diagram {
@@ -422,6 +469,7 @@ fn left_aligned_text() {
 #[test]
 fn simple_id_construction() {
     let id1 = crate::Id::new("hello");
+
     match id1 {
         Ok(_) => {}
         Err(..) => panic!("'hello' is not a valid value for id anymore"),
@@ -432,43 +480,69 @@ fn simple_id_construction() {
 fn test_some_arrow() {
     let labels: Trivial = NodeLabels::SomeNodesLabelled(vec![Some("A"), None]);
     let styles = Some(vec![crate::Style::None, crate::Style::Dotted]);
-    let start  = crate::Arrow::default();
-    let end    = crate::Arrow::from_arrow(crate::arrow::Shape::crow());
-    let result = test_input(LabelledGraph::new("test_some_labelled",
-            labels,
-            vec![edge_with_arrows(0, 1, "A-1", crate::Style::None, start, end, None)],
-            styles));
-    assert_eq!(result.unwrap(),
-r#"digraph test_some_labelled {
+    let start = crate::Arrow::default();
+    let end = crate::Arrow::from_arrow(crate::arrow::Shape::crow());
+    let result = test_input(LabelledGraph::new(
+        "test_some_labelled",
+        labels,
+        vec![edge_with_arrows(
+            0,
+            1,
+            "A-1",
+            crate::Style::None,
+            start,
+            end,
+            None,
+        )],
+        styles,
+    ));
+    assert_eq!(
+        result.unwrap(),
+        r#"digraph test_some_labelled {
     N0[label="A"];
     N1[label="N1"][style="dotted"];
     N0 -> N1[label="A-1"][arrowhead="crow"];
 }
-"#);
+"#
+    );
 }
 
 #[test]
 fn test_some_arrows() {
     let labels: Trivial = NodeLabels::SomeNodesLabelled(vec![Some("A"), None]);
     let styles = Some(vec![crate::Style::None, crate::Style::Dotted]);
-    let start  = crate::Arrow::from_arrow(crate::arrow::Shape::tee());
-    let end    = crate::Arrow::from_arrow(crate::arrow::Shape::Crow(crate::Side::Left));
-    let result = test_input(LabelledGraph::new("test_some_labelled",
-            labels,
-            vec![edge_with_arrows(0, 1, "A-1", crate::Style::None, start, end, None)],
-            styles));
-    assert_eq!(result.unwrap(),
-r#"digraph test_some_labelled {
+    let start = crate::Arrow::from_arrow(crate::arrow::Shape::tee());
+    let end = crate::Arrow::from_arrow(crate::arrow::Shape::Crow(crate::Side::Left));
+    let result = test_input(LabelledGraph::new(
+        "test_some_labelled",
+        labels,
+        vec![edge_with_arrows(
+            0,
+            1,
+            "A-1",
+            crate::Style::None,
+            start,
+            end,
+            None,
+        )],
+        styles,
+    ));
+
+    assert_eq!(
+        result.unwrap(),
+        r#"digraph test_some_labelled {
     N0[label="A"];
     N1[label="N1"][style="dotted"];
     N0 -> N1[label="A-1"][arrowhead="lcrow" dir="both" arrowtail="tee"];
 }
-"#);
+"#
+    );
 }
 
 #[test]
 fn badly_formatted_id() {
     let id2 = crate::Id::new("Weird { struct : ure } !!!");
+
     match id2 {
         Ok(_) => panic!("graphviz id suddenly allows spaces, brackets and stuff"),
         Err(..) => {}

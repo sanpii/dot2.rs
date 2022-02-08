@@ -86,38 +86,43 @@ impl Shape {
     /// Function which renders given Shape into a String for displaying.
     pub fn to_dot_string(&self) -> String {
         let mut res = String::new();
+
         match *self {
-            Shape::Box(fill, side) | Shape::ICurve(fill, side)| Shape::Diamond(fill, side) |
-            Shape::Inv(fill, side) | Shape::Normal(fill, side)=> {
+            Shape::Box(fill, side)
+            | Shape::ICurve(fill, side)
+            | Shape::Diamond(fill, side)
+            | Shape::Inv(fill, side)
+            | Shape::Normal(fill, side) => {
                 res.push_str(fill.as_slice());
                 match side {
                     crate::Side::Left | crate::Side::Right => res.push_str(side.as_slice()),
-                    crate::Side::Both => {},
+                    crate::Side::Both => {}
                 };
-            },
-            Shape::Dot(fill)       => res.push_str(fill.as_slice()),
-            Shape::Crow(side) | Shape::Curve(side) | Shape::Tee(side)
-            | Shape::Vee(side) => {
+            }
+            Shape::Dot(fill) => res.push_str(fill.as_slice()),
+            Shape::Crow(side) | Shape::Curve(side) | Shape::Tee(side) | Shape::Vee(side) => {
                 match side {
                     crate::Side::Left | crate::Side::Right => res.push_str(side.as_slice()),
-                    crate::Side::Both => {},
+                    crate::Side::Both => {}
                 }
             }
-            Shape::NoArrow => {},
+            Shape::NoArrow => {}
         };
+
         match *self {
-            Shape::NoArrow         => res.push_str("none"),
-            Shape::Normal(_, _)    => res.push_str("normal"),
-            Shape::Box(_, _)       => res.push_str("box"),
-            Shape::Crow(_)         => res.push_str("crow"),
-            Shape::Curve(_)        => res.push_str("curve"),
-            Shape::ICurve(_, _)    => res.push_str("icurve"),
-            Shape::Diamond(_, _)   => res.push_str("diamond"),
-            Shape::Dot(_)          => res.push_str("dot"),
-            Shape::Inv(_, _)       => res.push_str("inv"),
-            Shape::Tee(_)          => res.push_str("tee"),
-            Shape::Vee(_)          => res.push_str("vee"),
+            Shape::NoArrow => res.push_str("none"),
+            Shape::Normal(_, _) => res.push_str("normal"),
+            Shape::Box(_, _) => res.push_str("box"),
+            Shape::Crow(_) => res.push_str("crow"),
+            Shape::Curve(_) => res.push_str("curve"),
+            Shape::ICurve(_, _) => res.push_str("icurve"),
+            Shape::Diamond(_, _) => res.push_str("diamond"),
+            Shape::Dot(_) => res.push_str("dot"),
+            Shape::Inv(_, _) => res.push_str("inv"),
+            Shape::Tee(_) => res.push_str("tee"),
+            Shape::Vee(_) => res.push_str("vee"),
         };
+
         res
     }
 }
@@ -137,9 +142,7 @@ impl Arrow {
 
     /// Arrow constructor which returns a default arrow
     pub fn default() -> Arrow {
-        Arrow {
-            arrows: vec![],
-        }
+        Arrow { arrows: vec![] }
     }
 
     /// Arrow constructor which returns an empty arrow
@@ -152,7 +155,7 @@ impl Arrow {
     /// Arrow constructor which returns a regular triangle arrow, without modifiers
     pub fn normal() -> Arrow {
         Arrow {
-            arrows: vec![Shape::normal()]
+            arrows: vec![Shape::normal()],
         }
     }
 
@@ -168,11 +171,10 @@ impl Arrow {
         let mut cow = String::new();
         for arrow in &self.arrows {
             cow.push_str(&arrow.to_dot_string());
-        };
+        }
         cow
     }
 }
-
 
 impl Into<Arrow> for [Shape; 2] {
     fn into(self) -> Arrow {

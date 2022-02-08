@@ -12,7 +12,7 @@ impl Kind {
     pub(crate) fn keyword(&self) -> &'static str {
         match *self {
             Kind::Digraph => "digraph",
-            Kind::Graph => "graph"
+            Kind::Graph => "graph",
         }
     }
 

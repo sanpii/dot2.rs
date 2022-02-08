@@ -170,6 +170,7 @@ impl<'a> Text<'a> {
             }
         }
     }
+
     fn escape_str(s: &str) -> String {
         let mut out = String::with_capacity(s.len());
         for c in s.chars() {
@@ -210,8 +211,10 @@ impl<'a> Text<'a> {
     pub fn suffix_line(self, suffix: Self) -> Self {
         let mut prefix = self.pre_escaped_content().into_owned();
         let suffix = suffix.pre_escaped_content();
+
         prefix.push_str(r"\n\n");
         prefix.push_str(&suffix);
+
         Self::EscStr(prefix.into())
     }
 }

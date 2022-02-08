@@ -26,7 +26,11 @@ where
 
 /// Renders directed graph `g` into the writer `w` in DOT syntax.
 /// (Main entry point for the library.)
-pub fn render_opts<'a, N, E, G, W>(g: &'a G, w: &mut W, options: &[self::Option]) -> std::io::Result<()>
+pub fn render_opts<'a, N, E, G, W>(
+    g: &'a G,
+    w: &mut W,
+    options: &[self::Option],
+) -> std::io::Result<()>
 where
     N: Clone + 'a,
     E: Clone + 'a,
@@ -41,19 +45,26 @@ where
     let mut graph_attrs = Vec::new();
     let mut content_attrs = Vec::new();
     let font;
+
     if let Some(fontname) = options.iter().find_map(|option| {
-        if let self::Option::Fontname(fontname) = option { Some(fontname) } else { None }
+        if let self::Option::Fontname(fontname) = option {
+            Some(fontname)
+        } else {
+            None
+        }
     }) {
         font = format!(r#"fontname="{}""#, fontname);
         graph_attrs.push(&font[..]);
         content_attrs.push(&font[..]);
     }
+
     if options.contains(&self::Option::DarkTheme) {
         graph_attrs.push(r#"bgcolor="black""#);
         graph_attrs.push(r#"fontcolor="white""#);
         content_attrs.push(r#"color="white""#);
         content_attrs.push(r#"fontcolor="white""#);
     }
+
     if !(graph_attrs.is_empty() && content_attrs.is_empty()) {
         writeln!(w, r#"    graph[{}];"#, graph_attrs.join(" "))?;
         let content_attrs_str = content_attrs.join(" ");
@@ -62,6 +73,7 @@ where
     }
 
     let mut text = Vec::new();
+
     for n in g.nodes().iter() {
         write!(w, "    ")?;
         let id = g.node_id(n);
@@ -112,7 +124,14 @@ where
         let source_id = g.node_id(&source);
         let target_id = g.node_id(&target);
 
-        write!(text, "{} {} {}", source_id.as_slice(), g.kind().edgeop(), target_id.as_slice()).unwrap();
+        write!(
+            text,
+            "{} {} {}",
+            source_id.as_slice(),
+            g.kind().edgeop(),
+            target_id.as_slice()
+        )
+        .unwrap();
 
         if !options.contains(&self::Option::NoEdgeLabels) {
             write!(text, "[label={}]", escaped_label).unwrap();
@@ -133,8 +152,9 @@ where
             }
         }
 
-        if !options.contains(&self::Option::NoArrows) &&
-            (!start_arrow.is_default() || !end_arrow.is_default()) {
+        if !options.contains(&self::Option::NoArrows)
+            && (!start_arrow.is_default() || !end_arrow.is_default())
+        {
             write!(text, "[").unwrap();
             if !end_arrow.is_default() {
                 write!(text, "arrowhead=\"").unwrap();

@@ -20,10 +20,12 @@ impl<'a> Id<'a> {
     /// quotes, ...) will return an empty `Err` value.
     pub fn new<Name: Into<std::borrow::Cow<'a, str>>>(name: Name) -> Result<Id<'a>, ()> {
         let name = name.into();
+
         match name.chars().next() {
             Some(c) if c.is_ascii_alphabetic() || c == '_' => {}
             _ => return Err(()),
         }
+
         if !name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
             return Err(());
         }
