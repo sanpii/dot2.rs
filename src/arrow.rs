@@ -84,10 +84,10 @@ impl Shape {
     }
 
     /// Function which renders given Shape into a String for displaying.
-    pub fn to_dot_string(&self) -> String {
+    pub fn to_dot_string(self) -> String {
         let mut res = String::new();
 
-        match *self {
+        match self {
             Self::Box(fill, side)
             | Self::ICurve(fill, side)
             | Self::Diamond(fill, side)
@@ -109,7 +109,7 @@ impl Shape {
             Self::NoArrow => {}
         };
 
-        match *self {
+        match self {
             Self::NoArrow => res.push_str("none"),
             Self::Normal(_, _) => res.push_str("normal"),
             Self::Box(_, _) => res.push_str("box"),
@@ -176,26 +176,26 @@ impl Arrow {
     }
 }
 
-impl Into<Arrow> for [Shape; 2] {
-    fn into(self) -> Arrow {
-        Arrow {
-            arrows: vec![self[0], self[1]],
+impl From<[Shape; 2]> for Arrow {
+    fn from(shape: [Shape; 2]) -> Self {
+        Self {
+            arrows: vec![shape[0], shape[1]],
         }
     }
 }
 
-impl Into<Arrow> for [Shape; 3] {
-    fn into(self) -> Arrow {
-        Arrow {
-            arrows: vec![self[0], self[1], self[2]],
+impl From<[Shape; 3]> for Arrow {
+    fn from(shape: [Shape; 3]) -> Self {
+        Self {
+            arrows: vec![shape[0], shape[1], shape[2]],
         }
     }
 }
 
-impl Into<Arrow> for [Shape; 4] {
-    fn into(self) -> Arrow {
-        Arrow {
-            arrows: vec![self[0], self[1], self[2], self[3]],
+impl From<[Shape; 4]> for Arrow {
+    fn from(shape: [Shape; 4]) -> Self {
+        Self {
+            arrows: vec![shape[0], shape[1], shape[2], shape[3]],
         }
     }
 }

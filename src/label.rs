@@ -184,7 +184,7 @@ impl<'a> Text<'a> {
     pub fn to_dot_string(&self) -> String {
         match *self {
             Self::LabelStr(ref s) => format!("\"{}\"", s.escape_default()),
-            Self::EscStr(ref s) => format!("\"{}\"", Self::escape_str(&s)),
+            Self::EscStr(ref s) => format!("\"{}\"", Self::escape_str(s)),
             Self::HtmlStr(ref s) => format!("<{}>", s),
         }
     }
