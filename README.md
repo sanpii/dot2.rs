@@ -162,11 +162,11 @@ impl<'a> dot::Labeller<'a> for Graph {
     fn node_id(&'a self, n: &Nd) -> dot::Id<'a> {
         dot::Id::new(format!("N{}", n)).unwrap()
     }
-    fn node_label<'b>(&'b self, n: &Nd) -> dot::LabelText<'b> {
-        dot::LabelText::LabelStr(self.nodes[*n].into())
+    fn node_label<'b>(&'b self, n: &Nd) -> dot::label::Text<'b> {
+        dot::label::Text::LabelStr(self.nodes[*n].into())
     }
-    fn edge_label<'b>(&'b self, _: &Ed) -> dot::LabelText<'b> {
-        dot::LabelText::LabelStr("&sube;".into())
+    fn edge_label<'b>(&'b self, _: &Ed) -> dot::label::Text<'b> {
+        dot::label::Text::LabelStr("&sube;".into())
     }
 }
 
@@ -222,12 +222,12 @@ impl<'a> dot::Labeller<'a> for Graph {
     fn node_id(&'a self, n: &Nd<'a>) -> dot::Id<'a> {
         dot::Id::new(format!("N{}", n.0)).unwrap()
     }
-    fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot::LabelText<'b> {
+    fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot::label::Text<'b> {
         let &(i, _) = n;
-        dot::LabelText::LabelStr(self.nodes[i].into())
+        dot::label::Text::LabelStr(self.nodes[i].into())
     }
-    fn edge_label<'b>(&'b self, _: &Ed<'b>) -> dot::LabelText<'b> {
-        dot::LabelText::LabelStr("&sube;".into())
+    fn edge_label<'b>(&'b self, _: &Ed<'b>) -> dot::label::Text<'b> {
+        dot::label::Text::LabelStr("&sube;".into())
     }
 }
 
