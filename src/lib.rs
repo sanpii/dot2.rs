@@ -1,9 +1,4 @@
 #![doc = include_str!("../README.md")]
-#![doc(
-    html_root_url = "https://doc.rust-lang.org/nightly/nightly-rustc/",
-    test(attr(allow(unused_variables), deny(warnings)))
-)]
-#![feature(nll)]
 
 use LabelText::*;
 
