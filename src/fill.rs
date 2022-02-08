@@ -8,8 +8,8 @@ pub enum Fill {
 impl Fill {
     pub fn as_slice(self) -> &'static str {
         match self {
-            Fill::Open => "o",
-            Fill::Filled => "",
+            Self::Open => "o",
+            Self::Filled => "",
         }
     }
 }

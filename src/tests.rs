@@ -109,10 +109,10 @@ impl LabelledGraph {
         node_labels: Trivial,
         edges: Vec<Edge>,
         node_styles: Option<Vec<crate::Style>>,
-    ) -> LabelledGraph {
+    ) -> Self {
         let count = node_labels.len();
 
-        LabelledGraph {
+        Self {
             name,
             node_labels: node_labels.to_opt_strs(),
             edges,
@@ -125,8 +125,8 @@ impl LabelledGraph {
 }
 
 impl LabelledGraphWithEscStrs {
-    fn new(name: &'static str, node_labels: Trivial, edges: Vec<Edge>) -> LabelledGraphWithEscStrs {
-        LabelledGraphWithEscStrs {
+    fn new(name: &'static str, node_labels: Trivial, edges: Vec<Edge>) -> Self {
+        Self {
             graph: LabelledGraph::new(name, node_labels, edges, None),
         }
     }

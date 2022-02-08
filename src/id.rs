@@ -18,7 +18,7 @@ impl<'a> Id<'a> {
     ///
     /// Passing an invalid string (containing spaces, brackets,
     /// quotes, ...) will return an empty `Err` value.
-    pub fn new<Name: Into<std::borrow::Cow<'a, str>>>(name: Name) -> Result<Id<'a>, ()> {
+    pub fn new<Name: Into<std::borrow::Cow<'a, str>>>(name: Name) -> Result<Self, ()> {
         let name = name.into();
 
         match name.chars().next() {
@@ -30,7 +30,7 @@ impl<'a> Id<'a> {
             return Err(());
         }
 
-        Ok(Id { name })
+        Ok(Self { name })
     }
 
     pub fn as_slice(&'a self) -> &'a str {

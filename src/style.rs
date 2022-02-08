@@ -18,16 +18,16 @@ pub enum Style {
 impl Style {
     pub fn as_slice(self) -> &'static str {
         match self {
-            Style::None => "",
-            Style::Solid => "solid",
-            Style::Dashed => "dashed",
-            Style::Dotted => "dotted",
-            Style::Bold => "bold",
-            Style::Rounded => "rounded",
-            Style::Diagonals => "diagonals",
-            Style::Filled => "filled",
-            Style::Striped => "striped",
-            Style::Wedged => "wedged",
+            Self::None => "",
+            Self::Solid => "solid",
+            Self::Dashed => "dashed",
+            Self::Dotted => "dotted",
+            Self::Bold => "bold",
+            Self::Rounded => "rounded",
+            Self::Diagonals => "diagonals",
+            Self::Filled => "filled",
+            Self::Striped => "striped",
+            Self::Wedged => "wedged",
         }
     }
 }

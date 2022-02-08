@@ -11,16 +11,16 @@ impl Kind {
     /// Determines which edge syntax must be used, and default style.
     pub(crate) fn keyword(&self) -> &'static str {
         match *self {
-            Kind::Digraph => "digraph",
-            Kind::Graph => "graph",
+            Self::Digraph => "digraph",
+            Self::Graph => "graph",
         }
     }
 
     /// The edgeop syntax to use for this graph kind.
     pub(crate) fn edgeop(&self) -> &'static str {
         match *self {
-            Kind::Digraph => "->",
-            Kind::Graph => "--",
+            Self::Digraph => "->",
+            Self::Graph => "--",
         }
     }
 }

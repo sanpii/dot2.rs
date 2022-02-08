@@ -10,9 +10,9 @@ pub enum Side {
 impl Side {
     pub fn as_slice(self) -> &'static str {
         match self {
-            Side::Left => "l",
-            Side::Right => "r",
-            Side::Both => "",
+            Self::Left => "l",
+            Self::Right => "r",
+            Self::Both => "",
         }
     }
 }
