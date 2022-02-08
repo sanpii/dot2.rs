@@ -42,6 +42,7 @@
 pub trait Labeller<'a> {
     type Node;
     type Edge;
+    type Subgraph;
 
     /// Must return a DOT compatible identifier naming the graph.
     fn graph_id(&'a self) -> crate::Id<'a>;
@@ -108,6 +109,28 @@ pub trait Labeller<'a> {
     ///
     /// [1]: https://graphviz.gitlab.io/_pages/doc/info/colors.html
     fn edge_color(&'a self, _e: &Self::Edge) -> Option<Text<'a>> {
+        None
+    }
+
+    /// Maps `s` to a unique subgraph identifier.
+    /// Prefix this identifier by `cluster_` to draw this subgraph in its own distinct retangle.
+    fn subgraph_id(&'a self, _s: &Self::Subgraph) -> Option<crate::Id<'a>> {
+        None
+    }
+
+    /// Maps `s` to the corresponding subgraph label.
+    fn subgraph_label(&'a self, _s: &Self::Subgraph) -> Text<'a> {
+        Text::LabelStr("".into())
+    }
+
+    /// Maps `s` to the corresponding subgraph style (default to `Style::None`).
+    fn subgraph_style(&'a self, _s: &Self::Subgraph) -> crate::Style {
+        crate::Style::None
+    }
+
+    /// Maps `s` to the corresponding subgraph shape.
+    /// If `None` is returned (default), no `shape` attribute is specified.
+    fn subgraph_shape(&'a self, _s: &Self::Subgraph) -> Option<Text<'a>> {
         None
     }
 

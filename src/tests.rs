@@ -13,6 +13,8 @@ struct Edge {
     color: Option<&'static str>,
 }
 
+type Subgraph = usize;
+
 fn edge(
     from: usize,
     to: usize,
@@ -69,6 +71,8 @@ struct LabelledGraph {
     /// Each edge relates a from-index to a to-index along with a
     /// label; `edges` collects them.
     edges: Vec<Edge>,
+
+    subgraphs: Vec<Vec<Node>>,
 }
 
 // A simple wrapper around LabelledGraph that forces the labels to
@@ -108,6 +112,7 @@ impl LabelledGraph {
         name: &'static str,
         node_labels: Trivial,
         edges: Vec<Edge>,
+        subgraphs: Vec<Vec<Node>>,
         node_styles: Option<Vec<crate::Style>>,
     ) -> Self {
         let count = node_labels.len();
@@ -120,6 +125,7 @@ impl LabelledGraph {
                 Some(nodes) => nodes,
                 None => vec![crate::Style::None; count],
             },
+            subgraphs,
         }
     }
 }
@@ -127,7 +133,7 @@ impl LabelledGraph {
 impl LabelledGraphWithEscStrs {
     fn new(name: &'static str, node_labels: Trivial, edges: Vec<Edge>) -> Self {
         Self {
-            graph: LabelledGraph::new(name, node_labels, edges, None),
+            graph: LabelledGraph::new(name, node_labels, edges, vec![], None),
         }
     }
 }
@@ -139,6 +145,7 @@ fn id_name<'a>(n: &Node) -> crate::Id<'a> {
 impl<'a> crate::Labeller<'a> for LabelledGraph {
     type Node = Node;
     type Edge = &'a Edge;
+    type Subgraph = Subgraph;
 
     fn graph_id(&'a self) -> crate::Id<'a> {
         crate::Id::new(self.name).unwrap()
@@ -178,11 +185,16 @@ impl<'a> crate::Labeller<'a> for LabelledGraph {
     fn edge_color(&'a self, e: &&'a Edge) -> Option<crate::label::Text<'a>> {
         e.color.map(|c| LabelStr(c.into()))
     }
+
+    fn subgraph_id(&'a self, s: &Self::Subgraph) -> Option<crate::Id<'a>> {
+        crate::Id::new(format!("cluster_{}", s)).ok()
+    }
 }
 
 impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
     type Node = Node;
     type Edge = &'a Edge;
+    type Subgraph = ();
 
     fn graph_id(&'a self) -> crate::Id<'a> {
         self.graph.graph_id()
@@ -208,6 +220,7 @@ impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
 impl<'a> crate::GraphWalk<'a> for LabelledGraph {
     type Node = Node;
     type Edge = &'a Edge;
+    type Subgraph = Subgraph;
 
     fn nodes(&'a self) -> crate::Nodes<'a, Node> {
         (0..self.node_labels.len()).collect()
@@ -224,11 +237,20 @@ impl<'a> crate::GraphWalk<'a> for LabelledGraph {
     fn target(&'a self, edge: &&'a Edge) -> Node {
         edge.to
     }
+
+    fn subgraphs(&'a self) -> crate::Subgraphs<'a, Subgraph> {
+        std::borrow::Cow::Owned((0..self.subgraphs.len()).collect::<Vec<_>>())
+    }
+
+    fn subgraph_nodes(&'a self, s: &Subgraph) -> crate::Nodes<'a, Node> {
+        std::borrow::Cow::Borrowed(&self.subgraphs[*s])
+    }
 }
 
 impl<'a> crate::GraphWalk<'a> for LabelledGraphWithEscStrs {
     type Node = Node;
     type Edge = &'a Edge;
+    type Subgraph = ();
 
     fn nodes(&'a self) -> crate::Nodes<'a, Node> {
         self.graph.nodes()
@@ -264,7 +286,13 @@ fn test_input(g: LabelledGraph) -> std::io::Result<String> {
 #[test]
 fn empty_graph() {
     let labels: Trivial = NodeLabels::UnlabelledNodes(0);
-    let r = test_input(LabelledGraph::new("empty_graph", labels, vec![], None));
+    let r = test_input(LabelledGraph::new(
+        "empty_graph",
+        labels,
+        vec![],
+        vec![],
+        None,
+    ));
 
     assert_eq!(
         r.unwrap(),
@@ -277,7 +305,13 @@ fn empty_graph() {
 #[test]
 fn single_node() {
     let labels: Trivial = NodeLabels::UnlabelledNodes(1);
-    let r = test_input(LabelledGraph::new("single_node", labels, vec![], None));
+    let r = test_input(LabelledGraph::new(
+        "single_node",
+        labels,
+        vec![],
+        vec![],
+        None,
+    ));
 
     assert_eq!(
         r.unwrap(),
@@ -292,7 +326,13 @@ fn single_node() {
 fn single_node_with_style() {
     let labels: Trivial = NodeLabels::UnlabelledNodes(1);
     let styles = Some(vec![crate::Style::Dashed]);
-    let r = test_input(LabelledGraph::new("single_node", labels, vec![], styles));
+    let r = test_input(LabelledGraph::new(
+        "single_node",
+        labels,
+        vec![],
+        vec![],
+        styles,
+    ));
 
     assert_eq!(
         r.unwrap(),
@@ -310,6 +350,7 @@ fn single_edge() {
         "single_edge",
         labels,
         vec![edge(0, 1, "E", crate::Style::None, None)],
+        vec![],
         None,
     ));
 
@@ -331,6 +372,7 @@ fn single_edge_with_style() {
         "single_edge",
         labels,
         vec![edge(0, 1, "E", crate::Style::Bold, Some("red"))],
+        vec![],
         None,
     ));
 
@@ -353,6 +395,7 @@ fn test_some_labelled() {
         "test_some_labelled",
         labels,
         vec![edge(0, 1, "A-1", crate::Style::None, None)],
+        vec![],
         styles,
     ));
 
@@ -374,6 +417,7 @@ fn single_cyclic_node() {
         "single_cyclic_node",
         labels,
         vec![edge(0, 0, "E", crate::Style::None, None)],
+        vec![],
         None,
     ));
 
@@ -399,6 +443,7 @@ fn hasse_diagram() {
             edge(1, 3, "", crate::Style::None, Some("red")),
             edge(2, 3, "", crate::Style::None, Some("black")),
         ],
+        vec![],
         None,
     ));
 
@@ -494,6 +539,7 @@ fn test_some_arrow() {
             end,
             None,
         )],
+        vec![],
         styles,
     ));
     assert_eq!(
@@ -525,6 +571,7 @@ fn test_some_arrows() {
             end,
             None,
         )],
+        vec![],
         styles,
     ));
 
@@ -547,4 +594,51 @@ fn badly_formatted_id() {
         Ok(_) => panic!("graphviz id suddenly allows spaces, brackets and stuff"),
         Err(..) => {}
     }
+}
+
+#[test]
+fn subgraph() {
+    let labels = NodeLabels::AllNodesLabelled(vec!["{x,y}", "{x}", "{y}", "{}"]);
+    let r = test_input(LabelledGraph::new(
+        "di",
+        labels,
+        vec![
+            edge(0, 1, "", crate::Style::None, None),
+            edge(0, 2, "", crate::Style::None, None),
+            edge(1, 3, "", crate::Style::None, None),
+            edge(2, 3, "", crate::Style::None, None),
+        ],
+        vec![vec![0, 1], vec![2, 3]],
+        None,
+    ));
+    assert_eq!(
+        r.unwrap(),
+        r#"digraph di {
+subgraph cluster_0 {
+label="";
+
+N0;
+N1;
+
+}
+
+subgraph cluster_1 {
+label="";
+
+N2;
+N3;
+
+}
+
+    N0[label="{x,y}"];
+    N1[label="{x}"];
+    N2[label="{y}"];
+    N3[label="{}"];
+    N0 -> N1[label=""];
+    N0 -> N2[label=""];
+    N1 -> N3[label=""];
+    N2 -> N3[label=""];
+}
+"#
+    );
 }

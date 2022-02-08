@@ -33,6 +33,7 @@ pub fn escape_html(s: &str) -> String {
 
 pub type Nodes<'a, N> = std::borrow::Cow<'a, [N]>;
 pub type Edges<'a, E> = std::borrow::Cow<'a, [E]>;
+pub type Subgraphs<'a, S> = std::borrow::Cow<'a, [S]>;
 
 #[cfg(test)]
 mod tests;

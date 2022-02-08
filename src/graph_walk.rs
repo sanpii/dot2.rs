@@ -14,6 +14,7 @@
 pub trait GraphWalk<'a> {
     type Node: Clone;
     type Edge: Clone;
+    type Subgraph: Clone;
 
     /// Returns all the nodes in this graph.
     fn nodes(&'a self) -> crate::Nodes<'a, Self::Node>;
@@ -23,4 +24,14 @@ pub trait GraphWalk<'a> {
     fn source(&'a self, edge: &Self::Edge) -> Self::Node;
     /// The target node for `edge`.
     fn target(&'a self, edge: &Self::Edge) -> Self::Node;
+
+    /// Retuns all the subgraphs in this graph.
+    fn subgraphs(&'a self) -> crate::Subgraphs<'a, Self::Subgraph> {
+        std::borrow::Cow::Borrowed(&[])
+    }
+
+    /// Retuns all the subgraphs in this graph.
+    fn subgraph_nodes(&'a self, _s: &Self::Subgraph) -> crate::Nodes<'a, Self::Node> {
+        std::borrow::Cow::Borrowed(&[])
+    }
 }

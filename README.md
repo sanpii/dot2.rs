@@ -37,13 +37,11 @@ forming a diamond-shaped acyclic graph and then pointing to the fifth
 which is cyclic.
 
 ```rust
-use std::io::Write;
-
 type Nd = isize;
 type Ed = (isize,isize);
 struct Edges(Vec<Ed>);
 
-pub fn render_to<W: Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) {
     let edges = Edges(vec![(0,1), (0,2), (1,3), (2,3), (3,4), (4,4)]);
     dot2::render(&edges, output).unwrap()
 }
@@ -51,6 +49,7 @@ pub fn render_to<W: Write>(output: &mut W) {
 impl<'a> dot2::Labeller<'a> for Edges {
     type Node = Nd;
     type Edge = Ed;
+    type Subgraph = ();
 
     fn graph_id(&'a self) -> dot2::Id<'a> {
         dot2::Id::new("example1").unwrap()
@@ -64,6 +63,7 @@ impl<'a> dot2::Labeller<'a> for Edges {
 impl<'a> dot2::GraphWalk<'a> for Edges {
     type Node = Nd;
     type Edge = Ed;
+    type Subgraph = ();
 
     fn nodes(&self) -> dot2::Nodes<'a,Nd> {
         // (assumes that |N| \approxeq |E|)
@@ -152,8 +152,6 @@ labeled with the &sube; character (specified using the HTML character
 entity `&sube`).
 
 ```rust
-use std::io::Write;
-
 type Nd = usize;
 type Ed<'a> = &'a (usize, usize);
 
@@ -162,7 +160,7 @@ struct Graph {
     edges: Vec<(usize,usize)>,
 }
 
-pub fn render_to<W: Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) {
     let nodes = vec!["{x,y}","{x}","{y}","{}"];
     let edges = vec![(0,1), (0,2), (1,3), (2,3)];
     let graph = Graph { nodes: nodes, edges: edges };
@@ -173,6 +171,7 @@ pub fn render_to<W: Write>(output: &mut W) {
 impl<'a> dot2::Labeller<'a> for Graph {
     type Node = Nd;
     type Edge = Ed<'a>;
+    type Subgraph = ();
 
     fn graph_id(&'a self) -> dot2::Id<'a> {
         dot2::Id::new("example2").unwrap()
@@ -194,6 +193,7 @@ impl<'a> dot2::Labeller<'a> for Graph {
 impl<'a> dot2::GraphWalk<'a> for Graph {
     type Node = Nd;
     type Edge = Ed<'a>;
+    type Subgraph = ();
 
     fn nodes(&self) -> dot2::Nodes<'a,Nd> {
         (0..self.nodes.len()).collect()
@@ -236,8 +236,6 @@ The output from this example is the same as the second example: the
 Hasse-diagram for the subsets of the set `{x, y}`.
 
 ```rust
-use std::io::Write;
-
 type Nd<'a> = (usize, &'a str);
 type Ed<'a> = (Nd<'a>, Nd<'a>);
 
@@ -246,7 +244,7 @@ struct Graph {
     edges: Vec<(usize,usize)>,
 }
 
-pub fn render_to<W: Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) {
     let nodes = vec!["{x,y}","{x}","{y}","{}"];
     let edges = vec![(0,1), (0,2), (1,3), (2,3)];
     let graph = Graph { nodes: nodes, edges: edges };
@@ -257,6 +255,7 @@ pub fn render_to<W: Write>(output: &mut W) {
 impl<'a> dot2::Labeller<'a> for Graph {
     type Node = Nd<'a>;
     type Edge = Ed<'a>;
+    type Subgraph = ();
 
     fn graph_id(&'a self) -> dot2::Id<'a> {
         dot2::Id::new("example3").unwrap()
@@ -280,6 +279,7 @@ impl<'a> dot2::Labeller<'a> for Graph {
 impl<'a> dot2::GraphWalk<'a> for Graph {
     type Node = Nd<'a>;
     type Edge = Ed<'a>;
+    type Subgraph = ();
 
     fn nodes(&'a self) -> dot2::Nodes<'a,Nd<'a>> {
         self.nodes.iter().map(|s| &s[..]).enumerate().collect()
@@ -313,6 +313,117 @@ impl<'a> dot2::GraphWalk<'a> for Graph {
 pub fn main() {
     let mut f = std::fs::File::create("example3.dot").unwrap();
     render_to(&mut f)
+}
+```
+
+For this fourth example, we take the first one and add subgraphs:
+
+```rust
+type Nd = isize;
+type Ed = (isize,isize);
+type Su = usize;
+struct Edges(Vec<Ed>);
+
+pub fn render_to<W: std::io::Write>(output: &mut W) {
+    let edges = Edges(vec!((0,1), (0,2), (1,3), (2,3), (3,4), (4,4)));
+    dot2::render(&edges, output).unwrap()
+}
+
+impl<'a> dot2::Labeller<'a> for Edges {
+    type Node = Nd;
+    type Edge = Ed;
+    type Subgraph = Su;
+
+#   fn graph_id(&'a self) -> dot2::Id<'a> { dot2::Id::new("example4").unwrap() }
+#
+#   fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
+#       dot2::Id::new(format!("N{}", *n)).unwrap()
+#   }
+    // ...
+
+    fn subgraph_id(&'a self, s: &Su) -> Option<dot2::Id<'a>> {
+        dot2::Id::new(format!("cluster_{}", s)).ok()
+    }
+}
+
+impl<'a> dot2::GraphWalk<'a> for Edges {
+    type Node = Nd;
+    type Edge = Ed;
+    type Subgraph = Su;
+
+#   fn nodes(&self) -> dot2::Nodes<'a,Nd> {
+#       // (assumes that |N| \approxeq |E|)
+#       let &Edges(ref v) = self;
+#       let mut nodes = Vec::with_capacity(v.len());
+#       for &(s,t) in v {
+#           nodes.push(s); nodes.push(t);
+#       }
+#       nodes.sort();
+#       nodes.dedup();
+#       std::borrow::Cow::Owned(nodes)
+#   }
+#
+#   fn edges(&'a self) -> dot2::Edges<'a,Ed> {
+#       let &Edges(ref edges) = self;
+#       std::borrow::Cow::Borrowed(&edges[..])
+#   }
+#
+#   fn source(&self, e: &Ed) -> Nd { e.0 }
+#
+#   fn target(&self, e: &Ed) -> Nd { e.1 }
+    // ...
+
+    fn subgraphs(&'a self) -> dot2::Subgraphs<'a, Su> {
+        std::borrow::Cow::Borrowed(&[0, 1])
+    }
+
+    fn subgraph_nodes(&'a self, s: &Su) -> dot2::Nodes<'a, Nd> {
+        let subgraph = if *s == 0 {
+            vec![0, 1, 2]
+        } else {
+            vec![3, 4]
+        };
+
+        std::borrow::Cow::Owned(subgraph)
+    }
+}
+# pub fn main() { render_to(&mut Vec::new()) }
+```
+
+```no_run
+# pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
+pub fn main() {
+    use std::fs::File;
+    let mut f = File::create("example4.dot").unwrap();
+    render_to(&mut f)
+}
+```
+
+The corresponding output:
+
+```dot
+digraph example4 {
+    subgraph cluster_0 {
+        label="";
+        N0;
+        N1;
+        N2;
+    }
+
+    subgraph cluster_1 {
+        label="";
+        N3;
+        N4;
+    }
+
+    N0[label="{x,y}"];
+    N1[label="{x}"];
+    N2[label="{y}"];
+    N3[label="{}"];
+    N0 -> N1[label="&sube;"];
+    N0 -> N2[label="&sube;"];
+    N1 -> N3[label="&sube;"];
+    N2 -> N3[label="&sube;"];
 }
 ```
 
