@@ -38,7 +38,6 @@ which is cyclic.
 
 ```rust
 use std::io::Write;
-use rustc_graphviz as dot;
 
 type Nd = isize;
 type Ed = (isize,isize);
@@ -46,27 +45,27 @@ struct Edges(Vec<Ed>);
 
 pub fn render_to<W: Write>(output: &mut W) {
     let edges = Edges(vec![(0,1), (0,2), (1,3), (2,3), (3,4), (4,4)]);
-    dot::render(&edges, output).unwrap()
+    dot2::render(&edges, output).unwrap()
 }
 
-impl<'a> dot::Labeller<'a> for Edges {
+impl<'a> dot2::Labeller<'a> for Edges {
     type Node = Nd;
     type Edge = Ed;
 
-    fn graph_id(&'a self) -> dot::Id<'a> {
-        dot::Id::new("example1").unwrap()
+    fn graph_id(&'a self) -> dot2::Id<'a> {
+        dot2::Id::new("example1").unwrap()
     }
 
-    fn node_id(&'a self, n: &Nd) -> dot::Id<'a> {
-        dot::Id::new(format!("N{}", *n)).unwrap()
+    fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
+        dot2::Id::new(format!("N{}", *n)).unwrap()
     }
 }
 
-impl<'a> dot::GraphWalk<'a> for Edges {
+impl<'a> dot2::GraphWalk<'a> for Edges {
     type Node = Nd;
     type Edge = Ed;
 
-    fn nodes(&self) -> dot::Nodes<'a,Nd> {
+    fn nodes(&self) -> dot2::Nodes<'a,Nd> {
         // (assumes that |N| \approxeq |E|)
         let &Edges(ref v) = self;
         let mut nodes = Vec::with_capacity(v.len());
@@ -80,7 +79,7 @@ impl<'a> dot::GraphWalk<'a> for Edges {
         nodes.into()
     }
 
-    fn edges(&'a self) -> dot::Edges<'a,Ed> {
+    fn edges(&'a self) -> dot2::Edges<'a,Ed> {
         let &Edges(ref edges) = self;
         (&edges[..]).into()
     }
@@ -104,12 +103,12 @@ impl<'a> dot::GraphWalk<'a> for Edges {
 ```no_run
 # pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
 pub fn main() {
-    let mut f = std::fs::File::create("example1.dot").unwrap();
+    let mut f = std::fs::File::create("example1.dot2").unwrap();
     render_to(&mut f)
 }
 ```
 
-Output from first example (in `example1.dot`):
+Output from first example (in `example1.dot2`):
 
 ```dot
 digraph example1 {
@@ -154,7 +153,6 @@ entity `&sube`).
 
 ```rust
 use std::io::Write;
-use rustc_graphviz as dot;
 
 type Nd = usize;
 type Ed<'a> = &'a (usize, usize);
@@ -169,39 +167,39 @@ pub fn render_to<W: Write>(output: &mut W) {
     let edges = vec![(0,1), (0,2), (1,3), (2,3)];
     let graph = Graph { nodes: nodes, edges: edges };
 
-    dot::render(&graph, output).unwrap()
+    dot2::render(&graph, output).unwrap()
 }
 
-impl<'a> dot::Labeller<'a> for Graph {
+impl<'a> dot2::Labeller<'a> for Graph {
     type Node = Nd;
     type Edge = Ed<'a>;
 
-    fn graph_id(&'a self) -> dot::Id<'a> {
-        dot::Id::new("example2").unwrap()
+    fn graph_id(&'a self) -> dot2::Id<'a> {
+        dot2::Id::new("example2").unwrap()
     }
 
-    fn node_id(&'a self, n: &Nd) -> dot::Id<'a> {
-        dot::Id::new(format!("N{}", n)).unwrap()
+    fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
+        dot2::Id::new(format!("N{}", n)).unwrap()
     }
 
-    fn node_label<'b>(&'b self, n: &Nd) -> dot::label::Text<'b> {
-        dot::label::Text::LabelStr(self.nodes[*n].into())
+    fn node_label<'b>(&'b self, n: &Nd) -> dot2::label::Text<'b> {
+        dot2::label::Text::LabelStr(self.nodes[*n].into())
     }
 
-    fn edge_label<'b>(&'b self, _: &Ed) -> dot::label::Text<'b> {
-        dot::label::Text::LabelStr("&sube;".into())
+    fn edge_label<'b>(&'b self, _: &Ed) -> dot2::label::Text<'b> {
+        dot2::label::Text::LabelStr("&sube;".into())
     }
 }
 
-impl<'a> dot::GraphWalk<'a> for Graph {
+impl<'a> dot2::GraphWalk<'a> for Graph {
     type Node = Nd;
     type Edge = Ed<'a>;
 
-    fn nodes(&self) -> dot::Nodes<'a,Nd> {
+    fn nodes(&self) -> dot2::Nodes<'a,Nd> {
         (0..self.nodes.len()).collect()
     }
 
-    fn edges(&'a self) -> dot::Edges<'a,Ed<'a>> {
+    fn edges(&'a self) -> dot2::Edges<'a,Ed<'a>> {
         self.edges.iter().collect()
     }
 
@@ -239,7 +237,6 @@ Hasse-diagram for the subsets of the set `{x, y}`.
 
 ```rust
 use std::io::Write;
-use rustc_graphviz as dot;
 
 type Nd<'a> = (usize, &'a str);
 type Ed<'a> = (Nd<'a>, Nd<'a>);
@@ -254,41 +251,41 @@ pub fn render_to<W: Write>(output: &mut W) {
     let edges = vec![(0,1), (0,2), (1,3), (2,3)];
     let graph = Graph { nodes: nodes, edges: edges };
 
-    dot::render(&graph, output).unwrap()
+    dot2::render(&graph, output).unwrap()
 }
 
-impl<'a> dot::Labeller<'a> for Graph {
+impl<'a> dot2::Labeller<'a> for Graph {
     type Node = Nd<'a>;
     type Edge = Ed<'a>;
 
-    fn graph_id(&'a self) -> dot::Id<'a> {
-        dot::Id::new("example3").unwrap()
+    fn graph_id(&'a self) -> dot2::Id<'a> {
+        dot2::Id::new("example3").unwrap()
     }
 
-    fn node_id(&'a self, n: &Nd<'a>) -> dot::Id<'a> {
-        dot::Id::new(format!("N{}", n.0)).unwrap()
+    fn node_id(&'a self, n: &Nd<'a>) -> dot2::Id<'a> {
+        dot2::Id::new(format!("N{}", n.0)).unwrap()
     }
 
-    fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot::label::Text<'b> {
+    fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot2::label::Text<'b> {
         let &(i, _) = n;
 
-        dot::label::Text::LabelStr(self.nodes[i].into())
+        dot2::label::Text::LabelStr(self.nodes[i].into())
     }
 
-    fn edge_label<'b>(&'b self, _: &Ed<'b>) -> dot::label::Text<'b> {
-        dot::label::Text::LabelStr("&sube;".into())
+    fn edge_label<'b>(&'b self, _: &Ed<'b>) -> dot2::label::Text<'b> {
+        dot2::label::Text::LabelStr("&sube;".into())
     }
 }
 
-impl<'a> dot::GraphWalk<'a> for Graph {
+impl<'a> dot2::GraphWalk<'a> for Graph {
     type Node = Nd<'a>;
     type Edge = Ed<'a>;
 
-    fn nodes(&'a self) -> dot::Nodes<'a,Nd<'a>> {
+    fn nodes(&'a self) -> dot2::Nodes<'a,Nd<'a>> {
         self.nodes.iter().map(|s| &s[..]).enumerate().collect()
     }
 
-    fn edges(&'a self) -> dot::Edges<'a,Ed<'a>> {
+    fn edges(&'a self) -> dot2::Edges<'a,Ed<'a>> {
         self.edges.iter()
             .map(|&(i,j)|((i, &self.nodes[i][..]),
                           (j, &self.nodes[j][..])))
