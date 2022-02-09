@@ -45,7 +45,7 @@ pub trait Labeller<'a> {
     type Subgraph;
 
     /// Must return a DOT compatible identifier naming the graph.
-    fn graph_id(&'a self) -> crate::Id<'a>;
+    fn graph_id(&'a self) -> crate::Result<crate::Id<'a>>;
 
     /// Maps `n` to a unique identifier with respect to `self`. The
     /// implementor is responsible for ensuring that the returned name

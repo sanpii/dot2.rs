@@ -147,8 +147,8 @@ impl<'a> crate::Labeller<'a> for LabelledGraph {
     type Edge = &'a Edge;
     type Subgraph = Subgraph;
 
-    fn graph_id(&'a self) -> crate::Id<'a> {
-        crate::Id::new(self.name).unwrap()
+    fn graph_id(&'a self) -> crate::Result<crate::Id<'a>> {
+        crate::Id::new(self.name)
     }
 
     fn node_id(&'a self, n: &Node) -> crate::Id<'a> {
@@ -196,7 +196,7 @@ impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
     type Edge = &'a Edge;
     type Subgraph = ();
 
-    fn graph_id(&'a self) -> crate::Id<'a> {
+    fn graph_id(&'a self) -> crate::Result<crate::Id<'a>> {
         self.graph.graph_id()
     }
 

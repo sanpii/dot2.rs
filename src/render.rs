@@ -44,7 +44,7 @@ where
     W: std::io::Write,
 {
 
-    writeln!(w, "{} {} {{", g.kind().keyword(), g.graph_id().as_slice())?;
+    writeln!(w, "{} {} {{", g.kind().keyword(), g.graph_id()?.as_slice())?;
 
     render_subgraphs(g, &g.subgraphs(), w, options)?;
     render_nodes(g, &g.nodes(), w, options)?;

@@ -51,8 +51,8 @@ impl<'a> dot2::Labeller<'a> for Edges {
     type Edge = Ed;
     type Subgraph = ();
 
-    fn graph_id(&'a self) -> dot2::Id<'a> {
-        dot2::Id::new("example1").unwrap()
+    fn graph_id(&'a self) -> dot2::Result<dot2::Id<'a>> {
+        dot2::Id::new("example1")
     }
 
     fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
@@ -173,8 +173,8 @@ impl<'a> dot2::Labeller<'a> for Graph {
     type Edge = Ed<'a>;
     type Subgraph = ();
 
-    fn graph_id(&'a self) -> dot2::Id<'a> {
-        dot2::Id::new("example2").unwrap()
+    fn graph_id(&'a self) -> dot2::Result<dot2::Id<'a>> {
+        dot2::Id::new("example2")
     }
 
     fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
@@ -257,8 +257,8 @@ impl<'a> dot2::Labeller<'a> for Graph {
     type Edge = Ed<'a>;
     type Subgraph = ();
 
-    fn graph_id(&'a self) -> dot2::Id<'a> {
-        dot2::Id::new("example3").unwrap()
+    fn graph_id(&'a self) -> dot2::Result<dot2::Id<'a>> {
+        dot2::Id::new("example3")
     }
 
     fn node_id(&'a self, n: &Nd<'a>) -> dot2::Id<'a> {
@@ -334,7 +334,9 @@ impl<'a> dot2::Labeller<'a> for Edges {
     type Edge = Ed;
     type Subgraph = Su;
 
-#   fn graph_id(&'a self) -> dot2::Id<'a> { dot2::Id::new("example4").unwrap() }
+#   fn graph_id(&'a self) -> dot2::Result<dot2::Id<'a>> {
+#       dot2::Id::new("example4")
+#   }
 #
 #   fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
 #       dot2::Id::new(format!("N{}", *n)).unwrap()
