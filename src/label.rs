@@ -135,6 +135,12 @@ pub trait Labeller<'a> {
         None
     }
 
+    /// Maps `s` to one of the [graphviz `color` names][1]. If `None`
+    /// is returned, no `color` attribute is specified.
+    fn subgraph_color(&'a self, _s: &Self::Subgraph) -> Option<crate::label::Text<'a>> {
+        None
+    }
+
     /// The kind of graph, defaults to `Kind::Digraph`.
     #[inline]
     fn kind(&self) -> crate::Kind {

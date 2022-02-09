@@ -88,6 +88,13 @@ fn render_subgraphs<
             writeln!(w, "style=\"{}\";", style.as_slice())?;
         }
 
+        let color = g.subgraph_color(s);
+        if !options.contains(&crate::render::Option::NoNodeColors) {
+            if let Some(c) = color {
+                writeln!(w, "color={};", c.to_dot_string())?;
+            }
+        }
+
         if let Some(s) = g.subgraph_shape(s) {
             write!(w, "shape=\"{}\";", s.to_dot_string())?;
         }
