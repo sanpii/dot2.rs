@@ -1,4 +1,10 @@
 [package]
 name = "dot2"
 version = "0.0.0"
+authors = ["Sanpi <sanpi@homecomputing.fr>"]
+description = "A library for generating Graphviz DOT language files for graphs."
 edition = "2021"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/sanpii/dot2.rs"
+keywords = ["dot", "graphviz", "graph"]
+categories = ["data-structures"]
