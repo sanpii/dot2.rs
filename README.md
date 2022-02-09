@@ -181,8 +181,8 @@ impl<'a> dot2::Labeller<'a> for Graph {
         dot2::Id::new(format!("N{}", n))
     }
 
-    fn node_label<'b>(&'b self, n: &Nd) -> dot2::label::Text<'b> {
-        dot2::label::Text::LabelStr(self.nodes[*n].into())
+    fn node_label<'b>(&'b self, n: &Nd) -> dot2::Result<dot2::label::Text<'b>> {
+        Ok(dot2::label::Text::LabelStr(self.nodes[*n].into()))
     }
 
     fn edge_label<'b>(&'b self, _: &Ed) -> dot2::label::Text<'b> {
@@ -265,10 +265,10 @@ impl<'a> dot2::Labeller<'a> for Graph {
         dot2::Id::new(format!("N{}", n.0))
     }
 
-    fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot2::label::Text<'b> {
+    fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot2::Result<dot2::label::Text<'b>> {
         let &(i, _) = n;
 
-        dot2::label::Text::LabelStr(self.nodes[i].into())
+        Ok(dot2::label::Text::LabelStr(self.nodes[i].into()))
     }
 
     fn edge_label<'b>(&'b self, _: &Ed<'b>) -> dot2::label::Text<'b> {

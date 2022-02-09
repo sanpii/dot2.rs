@@ -229,7 +229,7 @@ where
         write!(w, "    ")?;
         let id = g.node_id(n)?;
 
-        let escaped = &g.node_label(n).to_dot_string();
+        let escaped = &g.node_label(n)?.to_dot_string();
 
         write!(text, "{}", id.as_slice())?;
 

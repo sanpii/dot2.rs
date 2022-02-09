@@ -63,8 +63,9 @@ pub trait Labeller<'a> {
     /// Maps `n` to a label that will be used in the rendered output.
     /// The label need not be unique, and may be the empty string; the
     /// default is just the output from `node_id`.
-    fn node_label(&'a self, n: &Self::Node) -> Text<'a> {
-        Text::LabelStr(self.node_id(n).unwrap().name)
+    fn node_label(&'a self, n: &Self::Node) -> crate::Result<Text<'a>> {
+        self.node_id(n)
+            .map(|x| Text::LabelStr(x.name))
     }
 
     /// Maps `n` to a style that will be used in the rendered output.

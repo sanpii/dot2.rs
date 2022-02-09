@@ -155,11 +155,13 @@ impl<'a> crate::Labeller<'a> for LabelledGraph {
         id_name(n)
     }
 
-    fn node_label(&'a self, n: &Node) -> crate::label::Text<'a> {
-        match self.node_labels[*n] {
+    fn node_label(&'a self, n: &Node) -> crate::Result<crate::label::Text<'a>> {
+        let label = match self.node_labels[*n] {
             Some(l) => LabelStr(l.into()),
-            None => LabelStr(id_name(n).unwrap().name),
-        }
+            None => LabelStr(id_name(n)?.name),
+        };
+
+        Ok(label)
     }
 
     fn edge_start_arrow(&'a self, e: &Self::Edge) -> crate::Arrow {
@@ -204,10 +206,12 @@ impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
         self.graph.node_id(n)
     }
 
-    fn node_label(&'a self, n: &Node) -> crate::label::Text<'a> {
-        match self.graph.node_label(n) {
+    fn node_label(&'a self, n: &Node) -> crate::Result<crate::label::Text<'a>> {
+        let label = match self.graph.node_label(n)? {
             LabelStr(s) | EscStr(s) | HtmlStr(s) => EscStr(s),
-        }
+        };
+
+        Ok(label)
     }
 
     fn edge_label(&'a self, e: &&'a Edge) -> crate::label::Text<'a> {
