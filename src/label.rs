@@ -50,7 +50,7 @@ pub trait Labeller<'a> {
     /// Maps `n` to a unique identifier with respect to `self`. The
     /// implementor is responsible for ensuring that the returned name
     /// is a valid DOT identifier.
-    fn node_id(&'a self, n: &Self::Node) -> crate::Id<'a>;
+    fn node_id(&'a self, n: &Self::Node) -> crate::Result<crate::Id<'a>>;
 
     /// Maps `n` to one of the [graphviz `shape` names][1]. If `None`
     /// is returned, no `shape` attribute is specified.
@@ -64,7 +64,7 @@ pub trait Labeller<'a> {
     /// The label need not be unique, and may be the empty string; the
     /// default is just the output from `node_id`.
     fn node_label(&'a self, n: &Self::Node) -> Text<'a> {
-        Text::LabelStr(self.node_id(n).name)
+        Text::LabelStr(self.node_id(n).unwrap().name)
     }
 
     /// Maps `n` to a style that will be used in the rendered output.

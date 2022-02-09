@@ -138,8 +138,8 @@ impl LabelledGraphWithEscStrs {
     }
 }
 
-fn id_name<'a>(n: &Node) -> crate::Id<'a> {
-    crate::Id::new(format!("N{}", *n)).unwrap()
+fn id_name<'a>(n: &Node) -> crate::Result<crate::Id<'a>> {
+    crate::Id::new(format!("N{}", *n))
 }
 
 impl<'a> crate::Labeller<'a> for LabelledGraph {
@@ -151,14 +151,14 @@ impl<'a> crate::Labeller<'a> for LabelledGraph {
         crate::Id::new(self.name)
     }
 
-    fn node_id(&'a self, n: &Node) -> crate::Id<'a> {
+    fn node_id(&'a self, n: &Node) -> crate::Result<crate::Id<'a>> {
         id_name(n)
     }
 
     fn node_label(&'a self, n: &Node) -> crate::label::Text<'a> {
         match self.node_labels[*n] {
             Some(l) => LabelStr(l.into()),
-            None => LabelStr(id_name(n).name),
+            None => LabelStr(id_name(n).unwrap().name),
         }
     }
 
@@ -200,7 +200,7 @@ impl<'a> crate::Labeller<'a> for LabelledGraphWithEscStrs {
         self.graph.graph_id()
     }
 
-    fn node_id(&'a self, n: &Node) -> crate::Id<'a> {
+    fn node_id(&'a self, n: &Node) -> crate::Result<crate::Id<'a>> {
         self.graph.node_id(n)
     }
 

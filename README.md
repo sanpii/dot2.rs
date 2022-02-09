@@ -55,8 +55,8 @@ impl<'a> dot2::Labeller<'a> for Edges {
         dot2::Id::new("example1")
     }
 
-    fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
-        dot2::Id::new(format!("N{}", *n)).unwrap()
+    fn node_id(&'a self, n: &Nd) -> dot2::Result<dot2::Id<'a>> {
+        dot2::Id::new(format!("N{}", *n))
     }
 }
 
@@ -177,8 +177,8 @@ impl<'a> dot2::Labeller<'a> for Graph {
         dot2::Id::new("example2")
     }
 
-    fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
-        dot2::Id::new(format!("N{}", n)).unwrap()
+    fn node_id(&'a self, n: &Nd) -> dot2::Result<dot2::Id<'a>> {
+        dot2::Id::new(format!("N{}", n))
     }
 
     fn node_label<'b>(&'b self, n: &Nd) -> dot2::label::Text<'b> {
@@ -261,8 +261,8 @@ impl<'a> dot2::Labeller<'a> for Graph {
         dot2::Id::new("example3")
     }
 
-    fn node_id(&'a self, n: &Nd<'a>) -> dot2::Id<'a> {
-        dot2::Id::new(format!("N{}", n.0)).unwrap()
+    fn node_id(&'a self, n: &Nd<'a>) -> dot2::Result<dot2::Id<'a>> {
+        dot2::Id::new(format!("N{}", n.0))
     }
 
     fn node_label<'b>(&'b self, n: &Nd<'b>) -> dot2::label::Text<'b> {
@@ -338,8 +338,8 @@ impl<'a> dot2::Labeller<'a> for Edges {
 #       dot2::Id::new("example4")
 #   }
 #
-#   fn node_id(&'a self, n: &Nd) -> dot2::Id<'a> {
-#       dot2::Id::new(format!("N{}", *n)).unwrap()
+#   fn node_id(&'a self, n: &Nd) -> dot2::Result<dot2::Id<'a>> {
+#       dot2::Id::new(format!("N{}", *n))
 #   }
     // ...
 

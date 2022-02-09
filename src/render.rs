@@ -60,8 +60,8 @@ where
         write!(w, "    ")?;
         let source = g.source(e);
         let target = g.target(e);
-        let source_id = g.node_id(&source);
-        let target_id = g.node_id(&target);
+        let source_id = g.node_id(&source)?;
+        let target_id = g.node_id(&target)?;
 
         write!(
             text,
@@ -169,7 +169,7 @@ fn render_subgraphs<
         writeln!(w, "{}", text)?;
 
         for n in g.subgraph_nodes(s).iter() {
-            writeln!(w, "{};", g.node_id(n).as_slice())?;
+            writeln!(w, "{};", g.node_id(n)?.as_slice())?;
         }
 
         writeln!(w, "\n}}\n")?;
@@ -227,7 +227,7 @@ where
 
     for n in nodes.iter() {
         write!(w, "    ")?;
-        let id = g.node_id(n);
+        let id = g.node_id(n)?;
 
         let escaped = &g.node_label(n).to_dot_string();
 
