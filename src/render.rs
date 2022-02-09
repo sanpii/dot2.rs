@@ -69,47 +69,46 @@ where
             source_id.as_slice(),
             g.kind().edgeop(),
             target_id.as_slice()
-        )
-        .unwrap();
+        )?;
 
         if !options.contains(&self::Option::NoEdgeLabels) {
-            write!(text, "[label={}]", escaped_label).unwrap();
+            write!(text, "[label={}]", escaped_label)?;
         }
 
         let style = g.edge_style(e);
         if !options.contains(&self::Option::NoEdgeStyles) && style != crate::Style::None {
-            write!(text, "[style=\"{}\"]", style.as_slice()).unwrap();
+            write!(text, "[style=\"{}\"]", style.as_slice())?;
         }
 
         let color = g.edge_color(e);
         if !options.contains(&self::Option::NoEdgeColors) {
             if let Some(c) = color {
                 let colorstring = c.to_dot_string();
-                write!(text, "[color=").unwrap();
-                write!(text, "{}", colorstring).unwrap();
-                write!(text, "]").unwrap();
+                write!(text, "[color=")?;
+                write!(text, "{}", colorstring)?;
+                write!(text, "]")?;
             }
         }
 
         if !options.contains(&self::Option::NoArrows)
             && (!start_arrow.is_default() || !end_arrow.is_default())
         {
-            write!(text, "[").unwrap();
+            write!(text, "[")?;
             if !end_arrow.is_default() {
-                write!(text, "arrowhead=\"").unwrap();
-                write!(text, "{}", end_arrow_s).unwrap();
-                write!(text, "\"").unwrap();
+                write!(text, "arrowhead=\"")?;
+                write!(text, "{}", end_arrow_s)?;
+                write!(text, "\"")?;
             }
             if !start_arrow.is_default() {
-                write!(text, " dir=\"both\" arrowtail=\"").unwrap();
-                write!(text, "{}", start_arrow_s).unwrap();
-                write!(text, "\"").unwrap();
+                write!(text, " dir=\"both\" arrowtail=\"")?;
+                write!(text, "{}", start_arrow_s)?;
+                write!(text, "\"")?;
             }
 
-            write!(text, "]").unwrap();
+            write!(text, "]")?;
         }
 
-        writeln!(text, ";").unwrap();
+        writeln!(text, ";")?;
         w.write_all(&text)?;
 
         text.clear();
@@ -232,32 +231,32 @@ where
 
         let escaped = &g.node_label(n).to_dot_string();
 
-        write!(text, "{}", id.as_slice()).unwrap();
+        write!(text, "{}", id.as_slice())?;
 
         if !options.contains(&self::Option::NoNodeLabels) {
-            write!(text, "[label={}]", escaped).unwrap();
+            write!(text, "[label={}]", escaped)?;
         }
 
         let style = g.node_style(n);
         if !options.contains(&self::Option::NoNodeStyles) && style != crate::Style::None {
-            write!(text, "[style=\"{}\"]", style.as_slice()).unwrap();
+            write!(text, "[style=\"{}\"]", style.as_slice())?;
         }
 
         let color = g.node_color(n);
         if !options.contains(&self::Option::NoNodeColors) {
             if let Some(c) = color {
                 let colorstring = c.to_dot_string();
-                write!(text, "[color=").unwrap();
-                write!(text, "{}", colorstring).unwrap();
-                write!(text, "]").unwrap();
+                write!(text, "[color=")?;
+                write!(text, "{}", colorstring)?;
+                write!(text, "]")?;
             }
         }
 
         if let Some(s) = g.node_shape(n) {
-            write!(text, "[shape={}]", &s.to_dot_string()).unwrap();
+            write!(text, "[shape={}]", &s.to_dot_string())?;
         }
 
-        writeln!(text, ";").unwrap();
+        writeln!(text, ";")?;
         w.write_all(&text)?;
 
         text.clear();

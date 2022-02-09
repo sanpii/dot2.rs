@@ -269,9 +269,9 @@ impl<'a> crate::GraphWalk<'a> for LabelledGraphWithEscStrs {
     }
 }
 
-fn test_input(g: LabelledGraph) -> std::io::Result<String> {
+fn test_input(g: LabelledGraph) -> crate::Result<String> {
     let mut writer = Vec::new();
-    crate::render(&g, &mut writer).unwrap();
+    crate::render(&g, &mut writer)?;
 
     let mut s = String::new();
     std::io::Read::read_to_string(&mut &*writer, &mut s)?;
