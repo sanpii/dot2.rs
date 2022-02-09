@@ -16,7 +16,7 @@ pub enum Option {
 
 /// Renders directed graph `g` into the writer `w` in DOT syntax.
 /// (Simple wrapper around `render_opts` that passes a default set of options.)
-pub fn render<'a, N, E, S, G, W>(g: &'a G, w: &mut W) -> std::io::Result<()>
+pub fn render<'a, N, E, S, G, W>(g: &'a G, w: &mut W) -> crate::Result
 where
     N: Clone + 'a,
     E: Clone + 'a,
@@ -34,7 +34,7 @@ pub fn render_opts<'a, N, E, S, G, W>(
     g: &'a G,
     w: &mut W,
     options: &[self::Option],
-) -> std::io::Result<()>
+) -> crate::Result
 where
     N: Clone + 'a,
     E: Clone + 'a,
@@ -115,7 +115,9 @@ where
         text.clear();
     }
 
-    writeln!(w, "}}")
+    writeln!(w, "}}")?;
+
+    Ok(())
 }
 
 fn render_subgraphs<
@@ -131,7 +133,7 @@ fn render_subgraphs<
     subgraphs: &crate::Subgraphs<'a, S>,
     w: &mut W,
     options: &[crate::render::Option],
-) -> std::io::Result<()> {
+) -> crate::Result {
     for s in subgraphs.iter() {
         let label;
         let shape;
@@ -182,7 +184,7 @@ pub fn render_nodes<'a, N, E, S, G, W>(
     nodes: &crate::Nodes<'a, N>,
     w: &mut W,
     options: &[crate::render::Option],
-) -> std::io::Result<()>
+) -> crate::Result
 where
     N: Clone + 'a,
     E: Clone + 'a,

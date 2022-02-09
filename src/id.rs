@@ -18,16 +18,16 @@ impl<'a> Id<'a> {
     ///
     /// Passing an invalid string (containing spaces, brackets,
     /// quotes, ...) will return an empty `Err` value.
-    pub fn new<Name: Into<std::borrow::Cow<'a, str>>>(name: Name) -> Result<Self, ()> {
+    pub fn new<Name: Into<std::borrow::Cow<'a, str>>>(name: Name) -> crate::Result<Self> {
         let name = name.into();
 
         match name.chars().next() {
             Some(c) if c.is_ascii_alphabetic() || c == '_' => {}
-            _ => return Err(()),
+            _ => return Err(crate::Error::InvalidId),
         }
 
         if !name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
-            return Err(());
+            return Err(crate::Error::InvalidId);
         }
 
         Ok(Self { name })

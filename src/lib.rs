@@ -4,6 +4,7 @@
 pub mod label;
 
 mod arrow;
+mod errors;
 mod fill;
 mod graph_walk;
 mod id;
@@ -13,6 +14,7 @@ mod side;
 mod style;
 
 pub use arrow::Arrow;
+pub use errors::*;
 pub use fill::Fill;
 pub use graph_walk::GraphWalk;
 pub use id::Id;
