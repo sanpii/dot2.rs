@@ -41,9 +41,9 @@ type Nd = isize;
 type Ed = (isize,isize);
 struct Edges(Vec<Ed>);
 
-pub fn render_to<W: std::io::Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) -> dot2::Result {
     let edges = Edges(vec![(0,1), (0,2), (1,3), (2,3), (3,4), (4,4)]);
-    dot2::render(&edges, output).unwrap()
+    dot2::render(&edges, output)
 }
 
 impl<'a> dot2::Labeller<'a> for Edges {
@@ -97,13 +97,13 @@ impl<'a> dot2::GraphWalk<'a> for Edges {
     }
 }
 
-# pub fn main() { render_to(&mut Vec::new()) }
+# pub fn main() -> dot2::Result { render_to(&mut Vec::new()) }
 ```
 
 ```no_run
-# pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
-pub fn main() {
-    let mut f = std::fs::File::create("example1.dot2").unwrap();
+# pub fn render_to<W:std::io::Write>(output: &mut W) -> dot2::Result { unimplemented!() }
+pub fn main() -> dot2::Result {
+    let mut f = std::fs::File::create("example1.dot2")?;
     render_to(&mut f)
 }
 ```
@@ -160,12 +160,12 @@ struct Graph {
     edges: Vec<(usize,usize)>,
 }
 
-pub fn render_to<W: std::io::Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) -> dot2::Result {
     let nodes = vec!["{x,y}","{x}","{y}","{}"];
     let edges = vec![(0,1), (0,2), (1,3), (2,3)];
     let graph = Graph { nodes: nodes, edges: edges };
 
-    dot2::render(&graph, output).unwrap()
+    dot2::render(&graph, output)
 }
 
 impl<'a> dot2::Labeller<'a> for Graph {
@@ -216,13 +216,13 @@ impl<'a> dot2::GraphWalk<'a> for Graph {
     }
 }
 
-# pub fn main() { render_to(&mut Vec::new()) }
+# pub fn main() -> dot2::Result { render_to(&mut Vec::new()) }
 ```
 
 ```no_run
-# pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
-pub fn main() {
-    let mut f = std::fs::File::create("example2.dot").unwrap();
+# pub fn render_to<W:std::io::Write>(output: &mut W) -> dot2::Result { unimplemented!() }
+pub fn main() -> dot2::Result {
+    let mut f = std::fs::File::create("example2.dot")?;
     render_to(&mut f)
 }
 ```
@@ -244,12 +244,12 @@ struct Graph {
     edges: Vec<(usize,usize)>,
 }
 
-pub fn render_to<W: std::io::Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) -> dot2::Result {
     let nodes = vec!["{x,y}","{x}","{y}","{}"];
     let edges = vec![(0,1), (0,2), (1,3), (2,3)];
     let graph = Graph { nodes: nodes, edges: edges };
 
-    dot2::render(&graph, output).unwrap()
+    dot2::render(&graph, output)
 }
 
 impl<'a> dot2::Labeller<'a> for Graph {
@@ -305,13 +305,13 @@ impl<'a> dot2::GraphWalk<'a> for Graph {
     }
 }
 
-# pub fn main() { render_to(&mut Vec::new()) }
+# pub fn main() -> dot2::Result { render_to(&mut Vec::new()) }
 ```
 
 ```no_run
-# pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
-pub fn main() {
-    let mut f = std::fs::File::create("example3.dot").unwrap();
+# pub fn render_to<W:std::io::Write>(output: &mut W) -> dot2::Result { unimplemented!() }
+pub fn main() -> dot2::Result {
+    let mut f = std::fs::File::create("example3.dot")?;
     render_to(&mut f)
 }
 ```
@@ -324,9 +324,9 @@ type Ed = (isize,isize);
 type Su = usize;
 struct Edges(Vec<Ed>);
 
-pub fn render_to<W: std::io::Write>(output: &mut W) {
+pub fn render_to<W: std::io::Write>(output: &mut W) -> dot2::Result {
     let edges = Edges(vec!((0,1), (0,2), (1,3), (2,3), (3,4), (4,4)));
-    dot2::render(&edges, output).unwrap()
+    dot2::render(&edges, output)
 }
 
 impl<'a> dot2::Labeller<'a> for Edges {
@@ -389,14 +389,13 @@ impl<'a> dot2::GraphWalk<'a> for Edges {
         std::borrow::Cow::Owned(subgraph)
     }
 }
-# pub fn main() { render_to(&mut Vec::new()) }
+# pub fn main() -> dot2::Result { render_to(&mut Vec::new()) }
 ```
 
 ```no_run
-# pub fn render_to<W:std::io::Write>(output: &mut W) { unimplemented!() }
-pub fn main() {
-    use std::fs::File;
-    let mut f = File::create("example4.dot").unwrap();
+# pub fn render_to<W:std::io::Write>(output: &mut W) -> dot2::Result { unimplemented!() }
+pub fn main() -> dot2::Result {
+    let mut f = std::fs::File::create("example4.dot")?;
     render_to(&mut f)
 }
 ```
