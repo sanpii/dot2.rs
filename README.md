@@ -1,3 +1,8 @@
+# dot2
+
+[![Github actions](https://github.com/sanpii/dot2.rs/workflows/.github/workflows/ci.yml/badge.svg)](https://github.com/sanpii/dot2.rs/actions?query=workflow%3A.github%2Fworkflows%2Fci.yml)
+[![Gitlab CI](https://gitlab.com/sanpi/dot2.rs/badges/main/pipeline.svg)](https://gitlab.com/sanpi/dot2.rs/commits/main)
+
 Generate files suitable for use with [Graphviz](https://www.graphviz.org/)
 
 The `render` function generates output (e.g., an `output.dot` file) for

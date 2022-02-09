@@ -1,0 +1,60 @@
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint_fmt:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: Check formating
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  lint_clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+      - name: Run clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-features -- --deny warnings
+
+  tests:
+    name: Tests
+    strategy:
+      matrix:
+        rust: ["stable", "beta", "nightly"]
+        os: ["ubuntu-latest", "macos-latest"]
+        mode: ["debug", "release"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+
+      - name: Run tests (debug)
+        if: matrix.mode == 'debug'
+        run: cargo test --workspace --features "${{ env.feature }}"
+
+      - name: Run tests (release)
+        if: matrix.mode == 'release'
+        run: cargo test --workspace --features "${{ env.feature }}" --release

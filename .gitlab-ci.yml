@@ -1,0 +1,30 @@
+image: "rust:latest"
+
+stages:
+    - lint
+    - test
+
+lint:fmt:
+    stage: lint
+    before_script:
+        - rustup component add rustfmt
+    script:
+        - cargo fmt --all -- --check
+
+lint:clippy:
+    stage: lint
+    script:
+        - rustup component add clippy
+        - cargo clippy --all-features -- --deny warnings
+
+test:
+    parallel:
+        matrix:
+            - MODE: ['debug', 'release']
+    script: |
+        if [[ $MODE == "release" ]]
+        then
+            cargo test --release
+        else
+            cargo test "$feature"
+        fi
