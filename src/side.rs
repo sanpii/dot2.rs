@@ -7,12 +7,14 @@ pub enum Side {
     Both,
 }
 
-impl Side {
-    pub fn as_slice(self) -> &'static str {
-        match self {
+impl std::fmt::Display for Side {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             Self::Left => "l",
             Self::Right => "r",
             Self::Both => "",
-        }
+        };
+
+        write!(f, "{s}")
     }
 }

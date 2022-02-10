@@ -7,20 +7,22 @@ pub enum Kind {
 }
 
 impl Kind {
-    /// The keyword to use to introduce the graph.
-    /// Determines which edge syntax must be used, and default style.
-    pub(crate) fn keyword(&self) -> &'static str {
-        match *self {
-            Self::Digraph => "digraph",
-            Self::Graph => "graph",
-        }
-    }
-
     /// The edgeop syntax to use for this graph kind.
     pub(crate) fn edgeop(&self) -> &'static str {
         match *self {
             Self::Digraph => "->",
             Self::Graph => "--",
         }
+    }
+}
+
+impl std::fmt::Display for Kind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match *self {
+            Self::Digraph => "digraph",
+            Self::Graph => "graph",
+        };
+
+        write!(f, "{s}")
     }
 }

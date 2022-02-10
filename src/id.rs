@@ -32,8 +32,10 @@ impl<'a> Id<'a> {
 
         Ok(Self { name })
     }
+}
 
-    pub fn as_slice(&'a self) -> &'a str {
-        &*self.name
+impl<'a> std::fmt::Display for Id<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
     }
 }

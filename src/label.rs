@@ -208,16 +208,6 @@ impl<'a> Text<'a> {
         out
     }
 
-    /// Renders text as string suitable for a label in a .dot file.
-    /// This includes quotes or suitable delimiters.
-    pub fn to_dot_string(&self) -> String {
-        match *self {
-            Self::LabelStr(ref s) => format!("\"{}\"", s.escape_default()),
-            Self::EscStr(ref s) => format!("\"{}\"", Self::escape_str(s)),
-            Self::HtmlStr(ref s) => format!("<{}>", s),
-        }
-    }
-
     /// Decomposes content into string suitable for making EscStr that
     /// yields same content as self. The result obeys the law
     /// render(`lt`) == render(`EscStr(lt.pre_escaped_content())`) for
@@ -245,5 +235,17 @@ impl<'a> Text<'a> {
         prefix.push_str(&suffix);
 
         Self::EscStr(prefix.into())
+    }
+}
+
+impl<'a> std::fmt::Display for Text<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match *self {
+            Self::LabelStr(ref s) => format!("\"{}\"", s.escape_default()),
+            Self::EscStr(ref s) => format!("\"{}\"", Self::escape_str(s)),
+            Self::HtmlStr(ref s) => format!("<{}>", s),
+        };
+
+        write!(f, "{s}")
     }
 }

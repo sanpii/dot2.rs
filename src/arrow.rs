@@ -82,48 +82,45 @@ impl Shape {
     pub fn vee() -> Self {
         Self::Vee(crate::Side::Both)
     }
+}
 
-    /// Function which renders given Shape into a String for displaying.
-    pub fn to_dot_string(self) -> String {
-        let mut res = String::new();
-
+impl std::fmt::Display for Shape {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Box(fill, side)
             | Self::ICurve(fill, side)
             | Self::Diamond(fill, side)
             | Self::Inv(fill, side)
             | Self::Normal(fill, side) => {
-                res.push_str(fill.as_slice());
-                match side {
-                    crate::Side::Left | crate::Side::Right => res.push_str(side.as_slice()),
-                    crate::Side::Both => {}
-                };
+                write!(f, "{fill}")?;
+                if matches!(side, crate::Side::Left | crate::Side::Right) {
+                    write!(f, "{side}")?;
+                }
             }
-            Self::Dot(fill) => res.push_str(fill.as_slice()),
+            Self::Dot(fill) => write!(f, "{fill}")?,
             Self::Crow(side) | Self::Curve(side) | Self::Tee(side) | Self::Vee(side) => {
-                match side {
-                    crate::Side::Left | crate::Side::Right => res.push_str(side.as_slice()),
-                    crate::Side::Both => {}
+                if matches!(side, crate::Side::Left | crate::Side::Right) {
+                    write!(f, "{side}")?;
                 }
             }
             Self::NoArrow => {}
         };
 
-        match self {
-            Self::NoArrow => res.push_str("none"),
-            Self::Normal(_, _) => res.push_str("normal"),
-            Self::Box(_, _) => res.push_str("box"),
-            Self::Crow(_) => res.push_str("crow"),
-            Self::Curve(_) => res.push_str("curve"),
-            Self::ICurve(_, _) => res.push_str("icurve"),
-            Self::Diamond(_, _) => res.push_str("diamond"),
-            Self::Dot(_) => res.push_str("dot"),
-            Self::Inv(_, _) => res.push_str("inv"),
-            Self::Tee(_) => res.push_str("tee"),
-            Self::Vee(_) => res.push_str("vee"),
+        let s = match self {
+            Self::NoArrow => "none",
+            Self::Normal(_, _) => "normal",
+            Self::Box(_, _) => "box",
+            Self::Crow(_) => "crow",
+            Self::Curve(_) => "curve",
+            Self::ICurve(_, _) => "icurve",
+            Self::Diamond(_, _) => "diamond",
+            Self::Dot(_) => "dot",
+            Self::Inv(_, _) => "inv",
+            Self::Tee(_) => "tee",
+            Self::Vee(_) => "vee",
         };
 
-        res
+        write!(f, "{s}")
     }
 }
 
@@ -165,14 +162,15 @@ impl Arrow {
             arrows: vec![arrow],
         }
     }
+}
 
-    /// Function which converts given arrow into a renderable form.
-    pub fn to_dot_string(&self) -> String {
-        let mut cow = String::new();
+impl std::fmt::Display for Arrow {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for arrow in &self.arrows {
-            cow.push_str(&arrow.to_dot_string());
+            write!(f, "{arrow}")?;
         }
-        cow
+
+        Ok(())
     }
 }
 

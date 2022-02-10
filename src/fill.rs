@@ -5,11 +5,13 @@ pub enum Fill {
     Filled,
 }
 
-impl Fill {
-    pub fn as_slice(self) -> &'static str {
-        match self {
+impl std::fmt::Display for Fill {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             Self::Open => "o",
             Self::Filled => "",
-        }
+        };
+
+        write!(f, "{s}")
     }
 }

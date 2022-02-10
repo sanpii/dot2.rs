@@ -15,9 +15,9 @@ pub enum Style {
     Wedged,
 }
 
-impl Style {
-    pub fn as_slice(self) -> &'static str {
-        match self {
+impl std::fmt::Display for Style {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             Self::None => "",
             Self::Solid => "solid",
             Self::Dashed => "dashed",
@@ -28,6 +28,8 @@ impl Style {
             Self::Filled => "filled",
             Self::Striped => "striped",
             Self::Wedged => "wedged",
-        }
+        };
+
+        write!(f, "{s}")
     }
 }
