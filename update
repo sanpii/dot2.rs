@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -euo pipefail
+
+main() {
+    git remote --verbose | grep -qE "^upstream\s" \
+        || git remote add upstream https://github.com/rust-lang/rust/
+
+    git fetch upstream
+
+    local lastest_commit=$(cat upstream)
+    local commits=$(git rev-list upstream/master ${lastest_commit}.. -- compiler/rustc_graphviz)
+
+    if [ -z "$commits" ]
+    then
+        echo "Already up to date"
+        return 0
+    fi
+
+    for commit in $commits
+    do
+        echo "Apply commit $commit"
+        git format-patch -1 "$commit" --stdout -- compiler/rustc_graphviz | git am -p3
+        echo "$commit" > upstream
+    done
+}
+
+main
