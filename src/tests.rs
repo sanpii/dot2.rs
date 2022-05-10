@@ -618,21 +618,19 @@ fn subgraph() {
     assert_eq!(
         r.unwrap(),
         r#"digraph di {
-subgraph cluster_0 {
-label="";
+    subgraph cluster_0 {
+        label="";
 
-N0;
-N1;
+        N0;
+        N1;
+    }
 
-}
+    subgraph cluster_1 {
+        label="";
 
-subgraph cluster_1 {
-label="";
-
-N2;
-N3;
-
-}
+        N2;
+        N3;
+    }
 
     N0[label="{x,y}"];
     N1[label="{x}"];
