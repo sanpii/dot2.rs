@@ -1,6 +1,6 @@
 [package]
 name = "dot2"
-version = "0.1.0"
+version = "1.0.0-beta.1"
 authors = ["Sanpi <sanpi@homecomputing.fr>"]
 description = "A library for generating Graphviz DOT language files for graphs."
 edition = "2021"
