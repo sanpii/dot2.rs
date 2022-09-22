@@ -217,7 +217,7 @@ impl<'a> Text<'a> {
             Self::EscStr(s) => s,
             Self::LabelStr(s) => {
                 if s.contains('\\') {
-                    (&*s).escape_default().to_string().into()
+                    (*s).escape_default().to_string().into()
                 } else {
                     s
                 }
