@@ -243,7 +243,7 @@ impl<'a> std::fmt::Display for Text<'a> {
         let s = match *self {
             Self::LabelStr(ref s) => format!("\"{}\"", s.escape_default()),
             Self::EscStr(ref s) => format!("\"{}\"", Self::escape_str(s)),
-            Self::HtmlStr(ref s) => format!("<{}>", s),
+            Self::HtmlStr(ref s) => format!("<{s}>"),
         };
 
         write!(f, "{s}")
