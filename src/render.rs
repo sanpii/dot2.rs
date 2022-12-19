@@ -198,6 +198,7 @@ where
     W: std::io::Write,
 {
     for e in edges.iter() {
+        let escaped_label = &g.edge_label(e).to_string();
         write!(w, "    ")?;
         let source = g.source(e);
         let target = g.target(e);
@@ -207,7 +208,7 @@ where
         write!(w, "{source_id} {} {target_id}", g.kind().edgeop(),)?;
 
         if !options.contains(&self::Option::NoEdgeLabels) {
-            write!(w, "[label={}]", g.edge_label(e))?;
+            write!(w, "[label={escaped_label}]")?;
         }
 
         let style = g.edge_style(e);
