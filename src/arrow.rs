@@ -126,15 +126,9 @@ impl std::fmt::Display for Shape {
 
 /// This structure holds all information that can describe an arrow connected to
 /// either start or end of an edge.
-#[derive(Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Default, Hash, PartialEq, Eq)]
 pub struct Arrow {
     pub arrows: Vec<Shape>,
-}
-
-impl Default for Arrow {
-    fn default() -> Self {
-        Self { arrows: vec![] }
-    }
 }
 
 impl Arrow {
