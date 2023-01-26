@@ -131,15 +131,16 @@ pub struct Arrow {
     pub arrows: Vec<Shape>,
 }
 
+impl Default for Arrow {
+    fn default() -> Self {
+        Self { arrows: vec![] }
+    }
+}
+
 impl Arrow {
     /// Return `true` if this is a default arrow.
     pub(crate) fn is_default(&self) -> bool {
         self.arrows.is_empty()
-    }
-
-    /// Arrow constructor which returns a default arrow
-    pub fn default() -> Self {
-        Self { arrows: vec![] }
     }
 
     /// Arrow constructor which returns an empty arrow
