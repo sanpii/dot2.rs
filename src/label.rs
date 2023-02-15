@@ -227,6 +227,7 @@ impl<'a> Text<'a> {
     }
 
     /// Puts `suffix` on a line below this label, with a blank line separator.
+    #[must_use]
     pub fn suffix_line(self, suffix: Self) -> Self {
         let mut prefix = self.pre_escaped_content().into_owned();
         let suffix = suffix.pre_escaped_content();

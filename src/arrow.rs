@@ -138,6 +138,7 @@ impl Arrow {
     }
 
     /// Arrow constructor which returns an empty arrow
+    #[must_use]
     pub fn none() -> Self {
         Self {
             arrows: vec![Shape::NoArrow],
@@ -145,6 +146,7 @@ impl Arrow {
     }
 
     /// Arrow constructor which returns a regular triangle arrow, without modifiers
+    #[must_use]
     pub fn normal() -> Self {
         Self {
             arrows: vec![Shape::normal()],
@@ -152,6 +154,7 @@ impl Arrow {
     }
 
     /// Arrow constructor which returns an arrow created by a given Shape.
+    #[must_use]
     pub fn from_arrow(arrow: Shape) -> Self {
         Self {
             arrows: vec![arrow],
