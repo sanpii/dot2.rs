@@ -214,7 +214,7 @@ impl<'a> Text<'a> {
     /// all `lt: Text`.
     fn pre_escaped_content(self) -> std::borrow::Cow<'a, str> {
         match self {
-            Self::EscStr(s) => s,
+            Self::EscStr(s) | Self::HtmlStr(s) => s,
             Self::LabelStr(s) => {
                 if s.contains('\\') {
                     (*s).escape_default().to_string().into()
@@ -222,7 +222,6 @@ impl<'a> Text<'a> {
                     s
                 }
             }
-            Self::HtmlStr(s) => s,
         }
     }
 
