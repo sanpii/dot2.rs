@@ -1,4 +1,4 @@
-/// GraphWalk is an abstraction over a directed graph = (nodes,edges)
+/// `GraphWalk` is an abstraction over a directed graph = (nodes,edges)
 /// made up of node handles `N` and edge handles `E`, where each `E`
 /// can be mapped to its source and target nodes.
 ///

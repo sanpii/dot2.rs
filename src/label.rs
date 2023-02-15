@@ -208,7 +208,7 @@ impl<'a> Text<'a> {
         out
     }
 
-    /// Decomposes content into string suitable for making EscStr that
+    /// Decomposes content into string suitable for making `EscStr` that
     /// yields same content as self. The result obeys the law
     /// render(`lt`) == render(`EscStr(lt.pre_escaped_content())`) for
     /// all `lt: Text`.
