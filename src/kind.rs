@@ -8,8 +8,8 @@ pub enum Kind {
 
 impl Kind {
     /// The edgeop syntax to use for this graph kind.
-    pub(crate) fn edgeop(&self) -> &'static str {
-        match *self {
+    pub(crate) fn edgeop(self) -> &'static str {
+        match self {
             Self::Digraph => "->",
             Self::Graph => "--",
         }
