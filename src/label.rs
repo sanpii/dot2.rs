@@ -194,7 +194,7 @@ impl<'a> Text<'a> {
             '\\' => f(c),
             _ => {
                 for c in c.escape_default() {
-                    f(c)
+                    f(c);
                 }
             }
         }
