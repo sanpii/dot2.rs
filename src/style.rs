@@ -13,6 +13,7 @@ pub enum Style {
     Filled,
     Striped,
     Wedged,
+    Invisible,
 }
 
 impl std::fmt::Display for Style {
@@ -28,6 +29,7 @@ impl std::fmt::Display for Style {
             Self::Filled => "filled",
             Self::Striped => "striped",
             Self::Wedged => "wedged",
+            Self::Invisible => "invis",
         };
 
         write!(f, "{s}")
