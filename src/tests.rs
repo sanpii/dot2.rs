@@ -484,12 +484,16 @@ fn left_aligned_text() {
 
     let mut writer = Vec::new();
 
-    let g = LabelledGraphWithEscStrs::new("syntax_tree", labels, vec![
-        edge(0, 1, "then", crate::Style::None, None),
-        edge(0, 2, "else", crate::Style::None, None),
-        edge(1, 3, ";", crate::Style::None, None),
-        edge(2, 3, ";", crate::Style::None, None),
-    ]);
+    let g = LabelledGraphWithEscStrs::new(
+        "syntax_tree",
+        labels,
+        vec![
+            edge(0, 1, "then", crate::Style::None, None),
+            edge(0, 2, "else", crate::Style::None, None),
+            edge(1, 3, ";", crate::Style::None, None),
+            edge(2, 3, ";", crate::Style::None, None),
+        ],
+    );
 
     crate::render(&g, &mut writer).unwrap();
     let mut r = String::new();
