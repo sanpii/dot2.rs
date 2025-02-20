@@ -101,8 +101,8 @@ impl NodeLabels<&'static str> {
     fn len(&self) -> usize {
         match self {
             &Self::UnlabelledNodes(len) => len,
-            &Self::AllNodesLabelled(ref lbls) => lbls.len(),
-            &Self::SomeNodesLabelled(ref lbls) => lbls.len(),
+            Self::AllNodesLabelled(lbls) => lbls.len(),
+            Self::SomeNodesLabelled(lbls) => lbls.len(),
         }
     }
 }
@@ -594,9 +594,8 @@ fn test_some_arrows() {
 fn badly_formatted_id() {
     let id2 = crate::Id::new("Weird { struct : ure } !!!");
 
-    match id2 {
-        Ok(_) => panic!("graphviz id suddenly allows spaces, brackets and stuff"),
-        Err(..) => {}
+    if id2.is_ok() {
+        panic!("graphviz id suddenly allows spaces, brackets and stuff");
     }
 }
 

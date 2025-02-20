@@ -238,7 +238,7 @@ impl<'a> Text<'a> {
     }
 }
 
-impl<'a> std::fmt::Display for Text<'a> {
+impl std::fmt::Display for Text<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match *self {
             Self::LabelStr(ref s) => format!("\"{}\"", s.escape_default()),
