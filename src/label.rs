@@ -35,7 +35,7 @@
 /// it in the generated .dot file. They can also provide more
 /// elaborate (and non-unique) label text that is used in the graphviz
 /// rendered output.
-
+///
 /// The graph instance is responsible for providing the DOT compatible
 /// identifiers for the nodes and (optionally) rendered labels for the nodes and
 /// edges, as well as an identifier for the graph itself.

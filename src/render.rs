@@ -84,10 +84,10 @@ fn render_subgraphs<
         }
 
         let color = g.subgraph_color(s);
-        if !options.contains(&crate::render::Option::NoNodeColors) {
-            if let Some(c) = color {
-                writeln!(w, "        color={c};")?;
-            }
+        if !options.contains(&crate::render::Option::NoNodeColors)
+            && let Some(c) = color
+        {
+            writeln!(w, "        color={c};")?;
         }
 
         if let Some(s) = g.subgraph_shape(s) {
@@ -167,10 +167,10 @@ where
         }
 
         let color = g.node_color(n);
-        if !options.contains(&self::Option::NoNodeColors) {
-            if let Some(c) = color {
-                write!(w, "[color={c}]")?;
-            }
+        if !options.contains(&self::Option::NoNodeColors)
+            && let Some(c) = color
+        {
+            write!(w, "[color={c}]")?;
         }
 
         if let Some(s) = g.node_shape(n) {
@@ -217,10 +217,10 @@ where
         }
 
         let color = g.edge_color(e);
-        if !options.contains(&self::Option::NoEdgeColors) {
-            if let Some(c) = color {
-                write!(w, "[color={c}]")?;
-            }
+        if !options.contains(&self::Option::NoEdgeColors)
+            && let Some(c) = color
+        {
+            write!(w, "[color={c}]")?;
         }
 
         let start_arrow = g.edge_start_arrow(e);
